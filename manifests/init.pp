@@ -597,7 +597,7 @@ class foreman (
       notify  => $foreman::manage_service_autorestart,
       source  => $foreman::source_dir,
       recurse => true,
-      purge   => $foreman::source_dir_purge,
+      purge   => $foreman::bool_source_dir_purge,
       replace => $foreman::manage_file_replace,
       audit   => $foreman::manage_audit,
     }
