@@ -1,0 +1,12 @@
+# File Managed by Puppet
+[foreman]
+name=Foreman Stable Repository
+baseurl=http://yum.theforeman.org/releases/1.0/el<%= scope.lookupvar('foreman::osver_maj')%>/$basearch
+enabled=1
+gpgcheck=0
+
+[foreman-nightly]
+name=Foreman Nightly Builds
+baseurl=http://yum.theforeman.org/nightly/el<%= scope.lookupvar('foreman::osver_maj')%>/
+enabled=0
+gpgcheck=0

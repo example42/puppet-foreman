@@ -6,20 +6,8 @@
 class foreman::passenger {
   require foreman
 
-  case $::operatingsystem {
-    centos: { require yum::repo::passenger }
-    redhat: { require yum::repo::passenger }
-    default: { }
-  }
-
   include apache::ssl
   include apache::passenger
-
-  file { "${foreman::basedir}/config.ru":
-    ensure => link,
-    owner  => $foreman::process_user,
-    target => "${foreman::basedir}/vendor/rails/railties/dispatches/config.ru",
-  }
 
   file { "${foreman::basedir}/config/environment.rb":
     owner   => $foreman::process_user,

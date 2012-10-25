@@ -15,6 +15,7 @@
 class foreman::params {
 
   ### Module's specific variables
+  $install_mode = 'server'
 
   $url = "http://${::fqdn}"
 
@@ -91,14 +92,17 @@ class foreman::params {
   }
 
   $db_sqlite_package = $::operatingsystem ? {
-    default => 'foreman-sqlite3',
+    default => 'foreman-sqlite',
   }
 
   $basedir = $::operatingsystem ? {
     default => '/usr/share/foreman',
   }
 
-  $preseed_file = '/var/cache/debconf/foreman.seeds'
+  $preseed_file = $::operatingsystem ? {
+    /(?i:Debian|Ubuntu|Mint)/ => '/var/cache/debconf/foreman.seeds',
+    default => '/var/cache/foreman.seeds',
+  }
 
   $template_database = ''
 

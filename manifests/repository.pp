@@ -19,23 +19,15 @@ class foreman::repository inherits foreman {
   case $::operatingsystem {
 
     redhat,centos,fedora,Scientific: {
-      yumrepo {
-        'foreman':
-          descr    => 'Foreman stable repository',
-          baseurl  => 'http://yum.theforeman.org/stable',
-          gpgcheck => '0',
-          enabled  => '1';
-        'foreman-testing':
-          descr    => 'Foreman testing repository',
-          baseurl  => 'http://yum.theforeman.org/test',
-          enabled  => '0',
-          gpgcheck => '0',
+      file { 'foreman.repo':
+        path    => '/etc/yum.repos.d/foreman.repo',
+        content => template('foreman/foreman.repo'),
       }
     }
 
     Debian,Ubuntu: {
       file { '/etc/apt/sources.list.d/foreman.list':
-        content => "deb http://deb.theforeman.org/ stable main\n"
+        content => "deb http://deb.theforeman.org/ ${lsbdistcodename} stable\n"
       }
       ~>
       exec { 'foreman-key':
