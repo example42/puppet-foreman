@@ -30,6 +30,11 @@ class foreman::puppetmaster {
 
   # Reports
   if $foreman::bool_reports == true {
+    file {
+      ["${rubysitedir}/puppet", "${rubysitedir}/puppet/reports"]:
+        ensure => directory,
+        audit   => $foreman::manage_audit,
+    }
     file { 'foreman.rb':
       ensure  => $foreman::manage_file,
       path    => "${rubysitedir}/puppet/reports/foreman.rb",
