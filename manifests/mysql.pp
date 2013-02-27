@@ -16,7 +16,7 @@ class foreman::mysql inherits foreman {
 
   # Grants management
   case $foreman::db_server {
-    'localhost','127.0.0.1': {
+    '', 'localhost','127.0.0.1': {
       mysql::grant { "foreman_server_grants_${::fqdn}":
         mysql_db         => $foreman::db_name,
         mysql_user       => $foreman::db_user,
