@@ -134,11 +134,8 @@ describe 'foreman' do
     end
   end
 
-  describe 'Test service autorestart', :broken => true do
-    it 'should automatically restart the service, by default' do
-      content = catalogue.resource('file', 'settings.yaml').send(:parameters)[:notify]
-      content.should == 'Service[foreman]{:name=>"foreman"}'
-    end
+  describe 'Test service autorestart' do
+    it { should contain_file('foreman.conf').with_notify('Service[foreman]') }
   end
 
   describe 'Test service autorestart' do
