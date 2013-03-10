@@ -135,7 +135,7 @@ describe 'foreman' do
   end
 
   describe 'Test service autorestart' do
-    it { should contain_file('foreman.conf').with_notify('Service[foreman]') }
+    it { should contain_file('settings.yaml').with_notify('Service[foreman]') }
   end
 
   describe 'Test service autorestart' do

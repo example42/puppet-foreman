@@ -9,7 +9,7 @@
 # This class is not intended to be used directly.
 # Use it as reference
 #
-class foreman::spec inherits foreman {
+class foreman::spec inherits foreman::server {
 
   # This just a test to override the arguments of an existing resource
   # Note that you can achieve this same result with just:
