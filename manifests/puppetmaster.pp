@@ -31,13 +31,13 @@ class foreman::puppetmaster {
   # Reports
   if $foreman::bool_reports == true {
     file {
-      ["${rubysitedir}/puppet", "${rubysitedir}/puppet/reports"]:
+      ["${foreman::rubysitedir}/puppet", "${foreman::rubysitedir}/puppet/reports"]:
         ensure => directory,
         audit   => $foreman::manage_audit,
     }
     file { 'foreman.rb':
       ensure  => $foreman::manage_file,
-      path    => "${rubysitedir}/puppet/reports/foreman.rb",
+      path    => "${foreman::rubysitedir}/puppet/reports/foreman.rb",
       mode    => $foreman::config_file_mode,
       owner   => $foreman::puppet_config_file_owner,
       group   => $foreman::puppet_config_file_group,

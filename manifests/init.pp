@@ -337,6 +337,7 @@ class foreman (
   $environments             = params_lookup( 'environments' ),
   $enc                      = params_lookup( 'enc' ),
   $reports                  = params_lookup( 'reports' ),
+  $rubysitedir              = params_lookup( 'rubysitedir', 'global' ),
   $facts                    = params_lookup( 'facts' ),
   $storeconfigs             = params_lookup( 'storeconfigs' ),
   $unattended               = params_lookup( 'unattended' ),
