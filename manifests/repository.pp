@@ -26,8 +26,12 @@ class foreman::repository inherits foreman {
     }
 
     Debian,Ubuntu: {
+      $dist = $::operatingsystem ? {
+        'Debian' => 'squeeze',
+        'Ubuntu' => 'precise',
+      }
       file { '/etc/apt/sources.list.d/foreman.list':
-        content => "deb http://deb.theforeman.org/ ${lsbdistcodename} stable\n"
+        content => "deb http://deb.theforeman.org/ ${dist} stable\n"
       }
       ~>
       exec { 'foreman-key':
