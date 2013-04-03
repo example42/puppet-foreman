@@ -575,6 +575,12 @@ class foreman (
     default   => template($foreman::template_reports),
   }
 
+  $manage_require_package = $foreman::install_mode ? {
+    'all'    => Package['foreman'],
+    'server' => Package['foreman'],
+    default  => undef,
+  }
+
   if $foreman::install_mode == 'all'
   or $foreman::install_mode == 'server' {
     include foreman::server
