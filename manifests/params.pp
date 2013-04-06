@@ -17,6 +17,8 @@ class foreman::params {
   ### Module's specific variables
   $install_mode = 'server'
 
+  $install_proxy = false
+
   $url = "http://${::fqdn}"
 
   # Perhaps this should be $puppet::params::server ?
@@ -92,7 +94,8 @@ class foreman::params {
   }
 
   $db_sqlite_package = $::operatingsystem ? {
-    default => 'foreman-sqlite',
+  /(?i:Ubuntu)/ => 'foreman-sqlite3',
+  default       => 'foreman-sqlite',
   }
 
   $basedir = $::operatingsystem ? {
@@ -122,6 +125,10 @@ class foreman::params {
 
   $package = $::operatingsystem ? {
     default => 'foreman',
+  }
+
+  $proxy_package = $::operatingsystem ? {
+    default => 'foreman-proxy',
   }
 
   $service = $::operatingsystem ? {
