@@ -72,6 +72,12 @@
 # [*passenger*]
 #   configure foreman via apache and passenger
 #
+# [*vhost_servername*]
+#   The virtualhost servername for foreman to listen on
+#
+# [*vhost_aliases*]
+#   The comma separated virtualhost aliases for foreman to listen on
+#
 # [*ssl*]
 #   force SSL (note: requires passenger)
 #
@@ -368,6 +374,8 @@ class foreman (
   $unattended               = params_lookup( 'unattended' ),
   $authentication           = params_lookup( 'authentication' ),
   $passenger                = params_lookup( 'passenger' ),
+  $vhost_servername         = params_lookup( 'vhost_servername' ),
+  $vhost_aliases            = params_lookup( 'vhost_aliases' ),
   $ssl                      = params_lookup( 'ssl' ),
   $db                       = params_lookup( 'db' ),
   $db_name                  = params_lookup( 'db_name' ),
