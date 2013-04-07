@@ -1,6 +1,6 @@
 <VirtualHost *:<%= port %>>
-  ServerName <%= fqdn %>
-  ServerAlias foreman
+  ServerName <%= name %>
+  ServerAlias <%= serveraliases %>
   DocumentRoot <%= docroot %>
 
   RailsAutoDetect On
@@ -17,8 +17,8 @@
 </VirtualHost>
 
 <VirtualHost *:443>
-  ServerName <%= fqdn %>
-  ServerAlias foreman
+  ServerName <%= name %>
+  ServerAlias <%= serveraliases %>
 
   RailsAutoDetect On
   DocumentRoot <%= docroot %>

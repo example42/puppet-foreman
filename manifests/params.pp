@@ -65,6 +65,12 @@ class foreman::params {
   # Perhaps this should be $puppet::params::passenger ?
   $passenger = false
 
+  # The virtualhost servername for foreman to listen on
+  $vhost_servername = $::fqdn
+
+  # The virtualhost aliases for foreman to listen on. Comma separated
+  $vhost_aliases = 'foreman'
+
   $ssl = true
 
   # Perhaps this should be $puppet::params::db ?
