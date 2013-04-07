@@ -22,6 +22,9 @@
 # [*url*]
 #   URL to access theforeman web application
 #
+# [*install_proxy*]
+#   Determines of foreman's smart-proxy should be installed
+#
 # [*puppet_server*]
 #   Hostname of the puppet server to talk to
 #
@@ -254,6 +257,9 @@
 # [*package*]
 #   The name of foreman package
 #
+# [*proxy_package*]
+#   The name of foreman proxy package
+#
 # [*service*]
 #   The name of foreman service
 #
@@ -311,6 +317,24 @@
 #   This is used by monitor, firewall and puppi (optional) components
 #   Can be defined also by the (top scope) variable $foreman_protocol
 #
+# [*proxy_feature_tftp*]
+#   Enable TFTP feature for the smart proxy
+#
+# [*proxy_feature_dns*]
+#   Enable DNS feature for the smart proxy
+#
+# [*proxy_feature_dhcp*]
+#   Enable DHCP feature for the smart proxy
+#
+# [*proxy_feature_puppetca*]
+#   Enable Puppet-CA feature for the smart proxy
+#
+# [*proxy_feature_puppet*]
+#   Enable Puppet feature for the smart proxy
+#
+# [*proxy_feature_bmc*]
+#   Enable BMC feature for the smart proxy
+#
 #
 # == Examples
 #
@@ -326,8 +350,9 @@
 #
 class foreman (
   $install_mode             = params_lookup( 'install_mode' ),
+  $install_proxy            = params_lookup( 'install_proxy' ),
   $url                      = params_lookup( 'url' ),
-  $puppet_server            = params_lookup( 'puppet_server' ),
+  $puppet_server            = params_lookup( 'puppet_server', 'global' ),
   $puppet_config_dir        = params_lookup( 'puppet_config_dir' ),
   $puppet_modules_dir       = params_lookup( 'puppet_modules_dir' ),
   $puppet_data_dir          = params_lookup( 'puppet_data_dir' ),
@@ -386,6 +411,7 @@ class foreman (
   $debug                    = params_lookup( 'debug' , 'global' ),
   $audit_only               = params_lookup( 'audit_only' , 'global' ),
   $package                  = params_lookup( 'package' ),
+  $proxy_package            = params_lookup( 'proxy_package' ),
   $service                  = params_lookup( 'service' ),
   $service_status           = params_lookup( 'service_status' ),
   $process                  = params_lookup( 'process' ),
@@ -402,9 +428,16 @@ class foreman (
   $log_dir                  = params_lookup( 'log_dir' ),
   $log_file                 = params_lookup( 'log_file' ),
   $port                     = params_lookup( 'port' ),
-  $protocol                 = params_lookup( 'protocol' )
+  $protocol                 = params_lookup( 'protocol' ),
+  $proxy_feature_tftp       = params_lookup( 'proxy_feature_tftp' ),
+  $proxy_feature_dns        = params_lookup( 'proxy_feature_dns' ),
+  $proxy_feature_dhcp       = params_lookup( 'proxy_feature_dhcp' ),
+  $proxy_feature_puppetca   = params_lookup( 'proxy_feature_puppetca' ),
+  $proxy_feature_puppet     = params_lookup( 'proxy_feature_puppet' ),
+  $proxy_feature_bmc        = params_lookup( 'proxy_feature_bmc' )
   ) inherits foreman::params {
 
+  $bool_install_proxy=any2bool($install_proxy)
   $bool_enc=any2bool($enc)
   $bool_reports=any2bool($reports)
   $bool_facts=any2bool($facts)
@@ -423,6 +456,12 @@ class foreman (
   $bool_firewall=any2bool($firewall)
   $bool_debug=any2bool($debug)
   $bool_audit_only=any2bool($audit_only)
+  $bool_proxy_feature_tftp=any2bool($proxy_feature_tftp)
+  $bool_proxy_feature_dns=any2bool($proxy_feature_dns)
+  $bool_proxy_feature_dhcp=any2bool($proxy_feature_dhcp)
+  $bool_proxy_feature_puppetca=any2bool($proxy_feature_puppetca)
+  $bool_proxy_feature_puppet=any2bool($proxy_feature_puppet)
+  $bool_proxy_feature_bmc=any2bool($proxy_feature_bmc)
 
   ### Definition of some variables used in the module
   $osver = split($::operatingsystemrelease, '[.]')
@@ -533,9 +572,14 @@ class foreman (
     include foreman::server
   }
 
+  if $foreman::bool_install_proxy == true {
+    include foreman::proxy
+  }
+
   if $foreman::install_mode == 'all'
   or $foreman::install_mode == 'puppetmaster' {
     include foreman::puppetmaster
   }
+
 
 }
