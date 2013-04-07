@@ -317,6 +317,24 @@
 #   This is used by monitor, firewall and puppi (optional) components
 #   Can be defined also by the (top scope) variable $foreman_protocol
 #
+# [*proxy_feature_tftp*]
+#   Enable TFTP feature for the smart proxy
+#
+# [*proxy_feature_dns*]
+#   Enable DNS feature for the smart proxy
+#
+# [*proxy_feature_dhcp*]
+#   Enable DHCP feature for the smart proxy
+#
+# [*proxy_feature_puppetca*]
+#   Enable Puppet-CA feature for the smart proxy
+#
+# [*proxy_feature_puppet*]
+#   Enable Puppet feature for the smart proxy
+#
+# [*proxy_feature_bmc*]
+#   Enable BMC feature for the smart proxy
+#
 #
 # == Examples
 #
@@ -553,8 +571,6 @@ class foreman (
   or $foreman::install_mode == 'server' {
     include foreman::server
   }
-
-  notify {"proxy: ${foreman::bool_install_proxy} | ${foreman::install_proxy}": }
 
   if $foreman::bool_install_proxy == true {
     include foreman::proxy

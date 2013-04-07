@@ -94,8 +94,8 @@ class foreman::params {
   }
 
   $db_sqlite_package = $::operatingsystem ? {
-  /(?i:Ubuntu)/ => 'foreman-sqlite3',
-  default       => 'foreman-sqlite',
+    /(?i:Ubuntu)/ => 'foreman-sqlite3',
+    default       => 'foreman-sqlite',
   }
 
   $basedir = $::operatingsystem ? {
