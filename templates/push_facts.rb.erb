@@ -14,6 +14,11 @@ SETTINGS = {
   :facts        => "<%= scope.lookupvar('foreman::bool_facts')%>",
   :storeconfigs => "<%= scope.lookupvar('foreman::bool_storeconfigs')%>",
   :timeout      => 3,
+  # if CA is specified, remote Foreman host will be verified
+  :ssl_ca       => "<%= scope.lookupvar('foreman::ssl_ca') -%>",
+  # ssl_cert and key are required if require_ssl_puppetmasters is enabled in Foreman
+  :ssl_cert     => "<%= scope.lookupvar('foreman::ssl_cert') -%>",
+  :ssl_key      => "<%= scope.lookupvar('foreman::ssl_key') -%>",
 }
 
 ### Do not edit below this line
@@ -48,13 +53,22 @@ Dir["#{puppetdir}/yaml/facts/*.yaml"].each do |filename|
     puts "Importing #{filename}"
     begin
       uri = URI.parse(url)
-      http = Net::HTTP.new(uri.host, uri.port)
-      if uri.scheme == 'https' then
-        http.use_ssl = true
-        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      end
       req = Net::HTTP::Post.new("/fact_values/create?format=yml")
       req.set_form_data({'facts' => fact})
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = uri.scheme == 'https'
+      if http.use_ssl?
+        if SETTINGS[:ssl_ca]
+          http.ca_file = SETTINGS[:ssl_ca]
+          http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+        else
+          http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        end
+        if SETTINGS[:ssl_cert] and SETTINGS[:ssl_key]
+           http.cert = OpenSSL::X509::Certificate.new(File.read(SETTINGS[:ssl_cert]))
+           http.key  = OpenSSL::PKey::RSA.new(File.read(SETTINGS[:ssl_key]), nil)
+        end
+      end
       response = http.request(req)
     rescue Exception => e
       raise "Could not send facts to Foreman: #{e}"
