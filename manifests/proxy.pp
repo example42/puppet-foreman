@@ -63,7 +63,7 @@ class foreman::proxy {
       # Todo: Something with exported resources?
 
     }
-    default: { raise Puppet::ParseError, "The foreman-proxy functionality is only supported with Mysql, for now" }
+    default: { fail("The foreman-proxy functionality is only supported with Mysql, for now") }
   }
 
 }
