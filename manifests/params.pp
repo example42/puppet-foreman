@@ -117,6 +117,8 @@ class foreman::params {
 
   $template_enc = ''
 
+  $template_push_facts = ''
+
   $template_preseed = ''
 
   $template_passenger = ''
