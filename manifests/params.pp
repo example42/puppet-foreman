@@ -19,7 +19,7 @@ class foreman::params {
 
   $install_proxy = false
 
-  $url = "http://${::fqdn}"
+  $url = "https://${::fqdn}"
 
   # Perhaps this should be $puppet::params::server ?
   $puppet_server = "puppet.$::domain"
@@ -72,6 +72,13 @@ class foreman::params {
   $vhost_aliases = 'foreman'
 
   $ssl = true
+
+  # If CA is specified, remote Foreman host will be verified in reports/ENC scripts
+  $ssl_ca   = "${puppet_data_dir}/ssl/certs/ca.pem"
+  # Used to authenticate to Foreman, required if require_ssl_puppetmasters is enabled
+  $ssl_cert = "${puppet_data_dir}/ssl/certs/${::fqdn}.pem"
+  $ssl_key  = "${puppet_data_dir}/ssl/private_keys/${::fqdn}.pem"
+
 
   # Perhaps this should be $puppet::params::db ?
   $db = 'sqlite'
