@@ -509,9 +509,12 @@ class foreman (
     },
   }
 
-  $manage_service_autorestart = $foreman::bool_service_autorestart ? {
-    true    => Service[foreman],
-    false   => undef,
+  $manage_service_autorestart = $foreman::bool_passenger ? {
+    true  => Service[apache],
+    false => $foreman::bool_service_autorestart ? {
+	    true    => Service[foreman],
+	    false   => undef,
+    }
   }
 
   $manage_file = $foreman::bool_absent ? {

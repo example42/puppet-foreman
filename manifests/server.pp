@@ -89,11 +89,6 @@ class foreman::server {
     # TODO
   }
 
-  # Auth
-  if $foreman::bool_authentication == true {
-    #TODO
-  }
-
   # Passenger / SSL
   if $foreman::bool_passenger == true {
     include foreman::passenger
