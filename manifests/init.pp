@@ -441,6 +441,8 @@ class foreman (
   $log_file                 = params_lookup( 'log_file' ),
   $port                     = params_lookup( 'port' ),
   $protocol                 = params_lookup( 'protocol' ),
+  $proxy_config_file        = params_lookup( 'proxy_config_file' ),
+  $template_proxy_settings  = params_lookup( 'template_proxy_settings' ),
   $proxy_feature_tftp       = params_lookup( 'proxy_feature_tftp' ),
   $proxy_feature_dns        = params_lookup( 'proxy_feature_dns' ),
   $proxy_feature_dhcp       = params_lookup( 'proxy_feature_dhcp' ),
@@ -585,6 +587,11 @@ class foreman (
   $manage_file_reports_content = $foreman::template_reports ? {
     ''        => template('foreman/foreman-report.rb.erb'),
     default   => template($foreman::template_reports),
+  }
+
+  $manage_proxy_file_content = $foreman::template_proxy_settings ? {
+    ''        => template('foreman/proxy-settings.yaml.erb'),
+    default   => template($foreman::template_proxy_settings),
   }
 
   $manage_require_package = $foreman::install_mode ? {

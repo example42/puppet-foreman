@@ -132,6 +132,8 @@ class foreman::params {
 
   $template_reports = ''
 
+  $template_proxy_settings = ''
+
   $script_file_mode = $::operatingsystem ? {
     default => '0550',
   }
@@ -172,6 +174,10 @@ class foreman::params {
 
   $config_file = $::operatingsystem ? {
     default => '/etc/foreman/settings.yaml',
+  }
+
+  $proxy_config_file = $::operatingsystem ? {
+    default => '/etc/foreman-proxy/settings.yaml',
   }
 
   $config_file_mode = $::operatingsystem ? {
