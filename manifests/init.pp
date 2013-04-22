@@ -511,6 +511,25 @@ class foreman (
     },
   }
 
+  $manage_proxy_service_enable = $foreman::bool_disableboot ? {
+    true    => false,
+    default => $foreman::bool_disable ? {
+      true    => false,
+      default => $foreman::bool_absent ? {
+        true  => false,
+        false => true,
+      },
+    },
+  }
+
+  $manage_proxy_service_ensure = $foreman::bool_disable ? {
+    true    => 'stopped',
+    default =>  $foreman::bool_absent ? {
+      true    => 'stopped',
+      default => 'running',
+    },
+  }
+
   $manage_service_autorestart = $foreman::bool_passenger ? {
     true  => Service[apache],
     false => $foreman::bool_service_autorestart ? {

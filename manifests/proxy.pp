@@ -10,8 +10,8 @@ class foreman::proxy {
   }
 
   service { 'foreman-proxy':
-    ensure    => $foreman::manage_service_ensure,
-    enable    => $foreman::manage_service_enable,
+    ensure    => $foreman::manage_proxy_service_ensure,
+    enable    => $foreman::manage_proxy_service_enable,
     hasstatus => true,
     require   => Package['foreman-proxy'],
   }
