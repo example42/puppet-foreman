@@ -79,6 +79,23 @@ class foreman::params {
   $ssl_cert = "${puppet_data_dir}/ssl/certs/${::fqdn}.pem"
   $ssl_key  = "${puppet_data_dir}/ssl/private_keys/${::fqdn}.pem"
 
+  $service_data_dir = '/var/lib/foreman'
+  $service_ssl_dir  = "${service_data_dir}/ssl"
+  $service_ssl_ca   = "${service_ssl_dir}/ca.pem"
+  $service_ssl_cert = "${service_ssl_dir}/${::fqdn}.pem"
+  $service_ssl_key  = "${service_ssl_dir}/${::fqdn}.key.pem"
+
+  $service_user     = 'foreman'
+  $service_group    = 'foreman'
+
+  $proxy_data_dir = '/var/lib/foreman-proxy'
+  $proxy_ssl_dir  = "${proxy_data_dir}/ssl"
+  $proxy_ssl_ca   = "${proxy_ssl_dir}/ca.pem"
+  $proxy_ssl_cert = "${proxy_ssl_dir}/${::fqdn}.pem"
+  $proxy_ssl_key  = "${proxy_ssl_dir}/${::fqdn}.key.pem"
+
+  $proxy_user     = 'foreman-proxy'
+  $proxy_group    = 'foreman-proxy'
 
   # Perhaps this should be $puppet::params::db ?
   $db = 'sqlite'
@@ -132,6 +149,8 @@ class foreman::params {
 
   $template_reports = ''
 
+  $template_proxy_settings = ''
+
   $script_file_mode = $::operatingsystem ? {
     default => '0550',
   }
@@ -172,6 +191,10 @@ class foreman::params {
 
   $config_file = $::operatingsystem ? {
     default => '/etc/foreman/settings.yaml',
+  }
+
+  $proxy_config_file = $::operatingsystem ? {
+    default => '/etc/foreman-proxy/settings.yml', # there is no 'a' in yaml!
   }
 
   $config_file_mode = $::operatingsystem ? {
