@@ -345,7 +345,7 @@
 # == Examples
 #
 # You can use this class in 2 ways:
-# - Set variables (at top scope level on in a ENC) and "include foreman"
+# - Set variables (at top scope level or in a ENC) and "include foreman"
 # - Call foreman as a parametrized class
 #
 # See README for details.
@@ -391,6 +391,13 @@ class foreman (
   $db_mysql_package         = params_lookup( 'db_mysql_package' ),
   $db_postgresql_package    = params_lookup( 'db_postgresql_package' ),
   $db_sqlite_package        = params_lookup( 'db_sqlite_package' ),
+  $service_data_dir         = params_lookup( 'service_data_dir' ),
+  $service_ssl_dir          = params_lookup( 'service_ssl_dir' ),
+  $service_ssl_ca           = params_lookup( 'service_ssl_ca' ),
+  $service_ssl_cert         = params_lookup( 'service_ssl_cert' ),
+  $service_ssl_key          = params_lookup( 'service_ssl_key' ),
+  $service_user             = params_lookup( 'service_user' ),
+  $service_group            = params_lookup( 'service_group' ),
   $basedir                  = params_lookup( 'basedir' ),
   $preseed_file             = params_lookup( 'preseed_file' ),
   $template_database        = params_lookup( 'template_database' ),
@@ -441,12 +448,21 @@ class foreman (
   $log_file                 = params_lookup( 'log_file' ),
   $port                     = params_lookup( 'port' ),
   $protocol                 = params_lookup( 'protocol' ),
+  $proxy_config_file        = params_lookup( 'proxy_config_file' ),
+  $template_proxy_settings  = params_lookup( 'template_proxy_settings' ),
   $proxy_feature_tftp       = params_lookup( 'proxy_feature_tftp' ),
   $proxy_feature_dns        = params_lookup( 'proxy_feature_dns' ),
   $proxy_feature_dhcp       = params_lookup( 'proxy_feature_dhcp' ),
   $proxy_feature_puppetca   = params_lookup( 'proxy_feature_puppetca' ),
   $proxy_feature_puppet     = params_lookup( 'proxy_feature_puppet' ),
-  $proxy_feature_bmc        = params_lookup( 'proxy_feature_bmc' )
+  $proxy_feature_bmc        = params_lookup( 'proxy_feature_bmc' ),
+  $proxy_data_dir           = params_lookup( 'proxy_data_dir' ),
+  $proxy_ssl_dir            = params_lookup( 'proxy_ssl_dir' ),
+  $proxy_ssl_ca             = params_lookup( 'proxy_ssl_ca' ),
+  $proxy_ssl_cert           = params_lookup( 'proxy_ssl_cert' ),
+  $proxy_ssl_key            = params_lookup( 'proxy_ssl_key' ),
+  $proxy_user               = params_lookup( 'proxy_user' ),
+  $proxy_group              = params_lookup( 'proxy_group' )
   ) inherits foreman::params {
 
   $bool_install_proxy=any2bool($install_proxy)
@@ -509,9 +525,31 @@ class foreman (
     },
   }
 
-  $manage_service_autorestart = $foreman::bool_service_autorestart ? {
-    true    => Service[foreman],
-    false   => undef,
+  $manage_proxy_service_enable = $foreman::bool_disableboot ? {
+    true    => false,
+    default => $foreman::bool_disable ? {
+      true    => false,
+      default => $foreman::bool_absent ? {
+        true  => false,
+        false => true,
+      },
+    },
+  }
+
+  $manage_proxy_service_ensure = $foreman::bool_disable ? {
+    true    => 'stopped',
+    default =>  $foreman::bool_absent ? {
+      true    => 'stopped',
+      default => 'running',
+    },
+  }
+
+  $manage_service_autorestart = $foreman::bool_passenger ? {
+    true  => Service[apache],
+    false => $foreman::bool_service_autorestart ? {
+	    true    => Service[foreman],
+	    false   => undef,
+    }
   }
 
   $manage_file = $foreman::bool_absent ? {
@@ -582,6 +620,11 @@ class foreman (
   $manage_file_reports_content = $foreman::template_reports ? {
     ''        => template('foreman/foreman-report.rb.erb'),
     default   => template($foreman::template_reports),
+  }
+
+  $manage_proxy_file_content = $foreman::template_proxy_settings ? {
+    ''        => template('foreman/proxy-settings.yaml.erb'),
+    default   => template($foreman::template_proxy_settings),
   }
 
   $manage_require_package = $foreman::install_mode ? {
