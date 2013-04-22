@@ -345,7 +345,7 @@
 # == Examples
 #
 # You can use this class in 2 ways:
-# - Set variables (at top scope level on in a ENC) and "include foreman"
+# - Set variables (at top scope level or in a ENC) and "include foreman"
 # - Call foreman as a parametrized class
 #
 # See README for details.
@@ -391,6 +391,13 @@ class foreman (
   $db_mysql_package         = params_lookup( 'db_mysql_package' ),
   $db_postgresql_package    = params_lookup( 'db_postgresql_package' ),
   $db_sqlite_package        = params_lookup( 'db_sqlite_package' ),
+  $service_data_dir         = params_lookup( 'service_data_dir' ),
+  $service_ssl_dir          = params_lookup( 'service_ssl_dir' ),
+  $service_ssl_ca           = params_lookup( 'service_ssl_ca' ),
+  $service_ssl_cert         = params_lookup( 'service_ssl_cert' ),
+  $service_ssl_key          = params_lookup( 'service_ssl_key' ),
+  $service_user             = params_lookup( 'service_user' ),
+  $service_group            = params_lookup( 'service_group' ),
   $basedir                  = params_lookup( 'basedir' ),
   $preseed_file             = params_lookup( 'preseed_file' ),
   $template_database        = params_lookup( 'template_database' ),
@@ -448,7 +455,14 @@ class foreman (
   $proxy_feature_dhcp       = params_lookup( 'proxy_feature_dhcp' ),
   $proxy_feature_puppetca   = params_lookup( 'proxy_feature_puppetca' ),
   $proxy_feature_puppet     = params_lookup( 'proxy_feature_puppet' ),
-  $proxy_feature_bmc        = params_lookup( 'proxy_feature_bmc' )
+  $proxy_feature_bmc        = params_lookup( 'proxy_feature_bmc' ),
+  $proxy_data_dir           = params_lookup( 'proxy_data_dir' ),
+  $proxy_ssl_dir            = params_lookup( 'proxy_ssl_dir' ),
+  $proxy_ssl_ca             = params_lookup( 'proxy_ssl_ca' ),
+  $proxy_ssl_cert           = params_lookup( 'proxy_ssl_cert' ),
+  $proxy_ssl_key            = params_lookup( 'proxy_ssl_key' ),
+  $proxy_user               = params_lookup( 'proxy_user' ),
+  $proxy_group              = params_lookup( 'proxy_group' )
   ) inherits foreman::params {
 
   $bool_install_proxy=any2bool($install_proxy)

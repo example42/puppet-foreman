@@ -105,6 +105,47 @@ class foreman::server {
     }
   }
 
+  if $foreman::bool_ssl {
+	  file {
+	    $foreman::service_data_dir:
+	      ensure => directory,
+	      mode   => 0755,
+	      owner  => $foreman::service_user,
+	      group  => $foreman::service_group,
+	      notify => $foreman::manage_service_autorestart;
+	
+	    $foreman::service_ssl_dir:
+	      ensure => directory,
+	      mode   => 0755,
+	      owner  => $foreman::service_user,
+	      group  => $foreman::service_group,
+	      notify => $foreman::manage_service_autorestart;
+	
+	    $foreman::service_ssl_ca:
+	      ensure => present,
+	      source => $foreman::ssl_ca,
+	      mode   => 0644,
+	      owner  => $foreman::service_user,
+	      group  => $foreman::service_group,
+	      notify => $foreman::manage_service_autorestart;
+	
+	    $foreman::service_ssl_cert:
+	      ensure => present,
+	      source => $foreman::ssl_cert,
+	      mode   => 0644,
+	      owner  => $foreman::service_user,
+	      group  => $foreman::service_group,
+	      notify => $foreman::manage_service_autorestart;
+	
+	    $foreman::service_ssl_key:
+	      ensure => present,
+	      source => $foreman::ssl_key,
+	      mode   => 0600,
+	      owner  => $foreman::service_user,
+	      group  => $foreman::service_group,
+	      notify => $foreman::manage_service_autorestart;
+	  }
+  }
 
   ### Include custom class if $my_class is set
   if $foreman::my_class {
