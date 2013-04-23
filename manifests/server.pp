@@ -3,10 +3,9 @@
 # This installs foreman server
 #
 class foreman::server {
-
   include foreman
 
-  ### Managed resources
+  # ## Managed resources
   file { 'foreman.seeds':
     ensure  => $foreman::manage_file,
     path    => $foreman::preseed_file,
@@ -28,18 +27,18 @@ class foreman::server {
   }
 
   case $foreman::db {
-    mysql: { include foreman::mysql }
-    postgresql: { include foreman::postgresql }
-    default: { include foreman::sqlite }
+    mysql      : { include foreman::mysql }
+    postgresql : { include foreman::postgresql }
+    default    : { include foreman::sqlite }
   }
 
   service { 'foreman':
-    ensure     => $foreman::manage_service_ensure,
-    name       => $foreman::service,
-    enable     => $foreman::manage_service_enable,
-    hasstatus  => $foreman::service_status,
-    pattern    => $foreman::process,
-    require    => Package['foreman', 'foreman-db'],
+    ensure    => $foreman::manage_service_ensure,
+    name      => $foreman::service,
+    enable    => $foreman::manage_service_enable,
+    hasstatus => $foreman::service_status,
+    pattern   => $foreman::process,
+    require   => Package['foreman', 'foreman-db'],
   }
 
   file { 'settings.yaml':
@@ -96,7 +95,7 @@ class foreman::server {
 
   # Storeconfigs
   if $foreman::bool_storeconfigs == true {
-    exec{ 'db-migrate':
+    exec { 'db-migrate':
       command     => '/usr/bin/rake RAILS_ENV=production db:migrate',
       cwd         => $foreman::basedir,
       require     => Service['foreman'],
@@ -106,56 +105,61 @@ class foreman::server {
   }
 
   if $foreman::bool_ssl {
-	  file {
-	    $foreman::service_data_dir:
-	      ensure => directory,
-	      mode   => 0755,
-	      owner  => $foreman::service_user,
-	      group  => $foreman::service_group,
-	      notify => $foreman::manage_service_autorestart;
-	
-	    $foreman::service_ssl_dir:
-	      ensure => directory,
-	      mode   => 0755,
-	      owner  => $foreman::service_user,
-	      group  => $foreman::service_group,
-	      notify => $foreman::manage_service_autorestart;
-	
-	    $foreman::service_ssl_ca:
-	      ensure => present,
-	      source => $foreman::ssl_ca,
-	      mode   => 0644,
-	      owner  => $foreman::service_user,
-	      group  => $foreman::service_group,
-	      notify => $foreman::manage_service_autorestart;
-	
-	    $foreman::service_ssl_cert:
-	      ensure => present,
-	      source => $foreman::ssl_cert,
-	      mode   => 0644,
-	      owner  => $foreman::service_user,
-	      group  => $foreman::service_group,
-	      notify => $foreman::manage_service_autorestart;
-	
-	    $foreman::service_ssl_key:
-	      ensure => present,
-	      source => $foreman::ssl_key,
-	      mode   => 0600,
-	      owner  => $foreman::service_user,
-	      group  => $foreman::service_group,
-	      notify => $foreman::manage_service_autorestart;
-	  }
+    file {
+      $foreman::service_data_dir:
+        ensure  => directory,
+        mode    => 0755,
+        owner   => $foreman::service_user,
+        group   => $foreman::service_group,
+        require => Package['foreman'],
+        notify  => $foreman::manage_service_autorestart;
+
+      $foreman::service_ssl_dir:
+        ensure => directory,
+        mode   => 0755,
+        owner  => $foreman::service_user,
+        group  => $foreman::service_group,
+        require => Package['foreman'],
+        notify => $foreman::manage_service_autorestart;
+
+      $foreman::service_ssl_ca:
+        ensure => present,
+        source => $foreman::ssl_ca,
+        mode   => 0644,
+        owner  => $foreman::service_user,
+        group  => $foreman::service_group,
+        require => Package['foreman'],
+        notify => $foreman::manage_service_autorestart;
+
+      $foreman::service_ssl_cert:
+        ensure => present,
+        source => $foreman::ssl_cert,
+        mode   => 0644,
+        owner  => $foreman::service_user,
+        group  => $foreman::service_group,
+        require => Package['foreman'],
+        notify => $foreman::manage_service_autorestart;
+
+      $foreman::service_ssl_key:
+        ensure => present,
+        source => $foreman::ssl_key,
+        mode   => 0600,
+        owner  => $foreman::service_user,
+        group  => $foreman::service_group,
+        require => Package['foreman'],
+        notify => $foreman::manage_service_autorestart;
+    }
   }
 
-  ### Include custom class if $my_class is set
+  # ## Include custom class if $my_class is set
   if $foreman::my_class {
     include $foreman::my_class
   }
 
-
-  ### Provide puppi data, if enabled ( puppi => true )
+  # ## Provide puppi data, if enabled ( puppi => true )
   if $foreman::bool_puppi == true {
-    $classvars=get_class_args()
+    $classvars = get_class_args()
+
     puppi::ze { 'foreman':
       ensure    => $foreman::manage_file,
       variables => $classvars,
@@ -163,8 +167,7 @@ class foreman::server {
     }
   }
 
-
-  ### Service monitoring, if enabled ( monitor => true )
+  # ## Service monitoring, if enabled ( monitor => true )
   if $foreman::bool_monitor == true {
     monitor::port { "foreman_${foreman::protocol}_${foreman::port}":
       protocol => $foreman::protocol,
@@ -173,6 +176,7 @@ class foreman::server {
       tool     => $foreman::monitor_tool,
       enable   => $foreman::manage_monitor,
     }
+
     monitor::process { 'foreman_process':
       process  => $foreman::process,
       service  => $foreman::service,
@@ -184,8 +188,7 @@ class foreman::server {
     }
   }
 
-
-  ### Firewall management, if enabled ( firewall => true )
+  # ## Firewall management, if enabled ( firewall => true )
   if $foreman::bool_firewall == true {
     firewall { "foreman_${foreman::protocol}_${foreman::port}":
       source      => $foreman::firewall_src,
@@ -199,8 +202,7 @@ class foreman::server {
     }
   }
 
-
-  ### Debugging, if enabled ( debug => true )
+  # ## Debugging, if enabled ( debug => true )
   if $foreman::bool_debug == true {
     file { 'debug_foreman':
       ensure  => $foreman::manage_file,
@@ -208,7 +210,8 @@ class foreman::server {
       mode    => '0640',
       owner   => 'root',
       group   => 'root',
-      content => inline_template('<%= scope.to_hash.reject { |k,v| k.to_s =~ /(uptime.*|path|timestamp|free|.*password.*|.*psk.*|.*key)/ }.to_yaml %>'),
+      content => inline_template('<%= scope.to_hash.reject { |k,v| k.to_s =~ /(uptime.*|path|timestamp|free|.*password.*|.*psk.*|.*key)/ }.to_yaml %>'
+      ),
     }
   }
 

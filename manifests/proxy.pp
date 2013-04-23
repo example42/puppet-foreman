@@ -11,42 +11,47 @@ class foreman::proxy {
 
   file {
     $foreman::proxy_data_dir:
-      ensure => directory,
-      mode   => 0755,
-      owner  => $foreman::proxy_user,
-      group  => $foreman::proxy_group,
-      notify => Service['foreman-proxy'];
+      ensure  => directory,
+      mode    => 0755,
+      owner   => $foreman::proxy_user,
+      group   => $foreman::proxy_group,
+      require => Package['foreman-proxy'],
+      notify  => Service['foreman-proxy'];
 
     $foreman::proxy_ssl_dir:
-      ensure => directory,
-      mode   => 0755,
-      owner  => $foreman::proxy_user,
-      group  => $foreman::proxy_group,
-      notify => Service['foreman-proxy'];
+      ensure  => directory,
+      mode    => 0755,
+      owner   => $foreman::proxy_user,
+      group   => $foreman::proxy_group,
+      require => Package['foreman-proxy'],
+      notify  => Service['foreman-proxy'];
 
     $foreman::proxy_ssl_ca:
-      ensure => present,
-      source => $foreman::ssl_ca,
-      mode   => 0644,
-      owner  => $foreman::proxy_user,
-      group  => $foreman::proxy_group,
-      notify => Service['foreman-proxy'];
+      ensure  => present,
+      source  => $foreman::ssl_ca,
+      mode    => 0644,
+      owner   => $foreman::proxy_user,
+      group   => $foreman::proxy_group,
+      require => Package['foreman-proxy'],
+      notify  => Service['foreman-proxy'];
 
     $foreman::proxy_ssl_cert:
-      ensure => present,
-      source => $foreman::ssl_cert,
-      mode   => 0644,
-      owner  => $foreman::proxy_user,
-      group  => $foreman::proxy_group,
-      notify => Service['foreman-proxy'];
+      ensure  => present,
+      source  => $foreman::ssl_cert,
+      mode    => 0644,
+      owner   => $foreman::proxy_user,
+      group   => $foreman::proxy_group,
+      require => Package['foreman-proxy'],
+      notify  => Service['foreman-proxy'];
 
     $foreman::proxy_ssl_key:
-      ensure => present,
-      source => $foreman::ssl_key,
-      mode   => 0600,
-      owner  => $foreman::proxy_user,
-      group  => $foreman::proxy_group,
-      notify => Service['foreman-proxy'];
+      ensure  => present,
+      source  => $foreman::ssl_key,
+      mode    => 0600,
+      owner   => $foreman::proxy_user,
+      group   => $foreman::proxy_group,
+      require => Package['foreman-proxy'],
+      notify  => Service['foreman-proxy'];
   }
 
   service { 'foreman-proxy':
