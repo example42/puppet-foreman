@@ -628,7 +628,7 @@ class foreman (
   }
 
   $manage_proxy_file_content = $foreman::template_proxy_settings ? {
-    ''        => template('foreman/proxy-settings.yaml.erb'),
+    ''        => template('foreman/proxy-settings.yml.erb'),
     default   => template($foreman::template_proxy_settings),
   }
 
