@@ -97,6 +97,11 @@ class foreman::params {
   $proxy_user     = 'foreman-proxy'
   $proxy_group    = 'foreman-proxy'
 
+  $proxy_tftp_syslinux_dir = $::operatingsystem ? {
+    /(?i:Debian|Ubuntu|Mint)/ => '/usr/lib/syslinux',
+    default                   => '/usr/share/syslinux',
+  }
+
   # Perhaps this should be $puppet::params::db ?
   $db = 'sqlite'
 

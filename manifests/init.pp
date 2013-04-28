@@ -457,6 +457,7 @@ class foreman (
   $proxy_feature_puppet     = params_lookup( 'proxy_feature_puppet' ),
   $proxy_feature_bmc        = params_lookup( 'proxy_feature_bmc' ),
   $proxy_data_dir           = params_lookup( 'proxy_data_dir' ),
+  $proxy_tftp_syslinux_dir  = params_lookup( 'proxy_tftp_syslinux_dir' ),
   $proxy_ssl_dir            = params_lookup( 'proxy_ssl_dir' ),
   $proxy_ssl_ca             = params_lookup( 'proxy_ssl_ca' ),
   $proxy_ssl_cert           = params_lookup( 'proxy_ssl_cert' ),
@@ -498,6 +499,11 @@ class foreman (
   $manage_package = $foreman::bool_absent ? {
     true  => 'absent',
     false => $foreman::version,
+  }
+
+  $manage_libvirt_package = $bool_unattended and !$bool_absent ? {
+    true  => $foreman::version,
+    false => 'absent',
   }
 
   $manage_service_enable = $foreman::bool_disableboot ? {
@@ -623,7 +629,7 @@ class foreman (
   }
 
   $manage_proxy_file_content = $foreman::template_proxy_settings ? {
-    ''        => template('foreman/proxy-settings.yaml.erb'),
+    ''        => template('foreman/proxy-settings.yml.erb'),
     default   => template($foreman::template_proxy_settings),
   }
 
