@@ -74,6 +74,10 @@ class foreman::proxy {
     audit   => $foreman::manage_audit,
   }
 
+  if $::foreman::bool_proxy_feature_tftp {
+    include foreman::proxy::tftp
+  }
+
   $features = [
     $::foreman::bool_proxy_feature_tftp ? {
       false => "''",

@@ -457,6 +457,7 @@ class foreman (
   $proxy_feature_puppet     = params_lookup( 'proxy_feature_puppet' ),
   $proxy_feature_bmc        = params_lookup( 'proxy_feature_bmc' ),
   $proxy_data_dir           = params_lookup( 'proxy_data_dir' ),
+  $proxy_tftp_syslinux_dir  = params_lookup( 'proxy_tftp_syslinux_dir' ),
   $proxy_ssl_dir            = params_lookup( 'proxy_ssl_dir' ),
   $proxy_ssl_ca             = params_lookup( 'proxy_ssl_ca' ),
   $proxy_ssl_cert           = params_lookup( 'proxy_ssl_cert' ),
