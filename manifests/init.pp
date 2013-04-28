@@ -500,6 +500,11 @@ class foreman (
     false => $foreman::version,
   }
 
+  $manage_libvirt_package = $bool_unattended and !$bool_absent ? {
+    true  => $foreman::version,
+    false => 'absent',
+  }
+
   $manage_service_enable = $foreman::bool_disableboot ? {
     true    => false,
     default => $foreman::bool_disable ? {

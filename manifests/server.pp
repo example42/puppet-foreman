@@ -84,8 +84,10 @@ class foreman::server {
   }
 
   # Unattended
-  if $foreman::bool_unattended == true {
-    # TODO
+  package { 'foreman-libvirt':
+    ensure  => $foreman::manage_libvirt_package,
+    before  => Service['foreman'],
+    require => Package['foreman'];
   }
 
   # Passenger / SSL
