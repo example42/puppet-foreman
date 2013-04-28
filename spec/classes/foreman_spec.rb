@@ -8,6 +8,7 @@ describe 'foreman' do
 
   describe 'Test standard installation' do
     it { should contain_package('foreman').with_ensure('present') }
+    it { should contain_package('foreman-libvirt').with_ensure('absent') }
     it { should contain_service('foreman').with_ensure('running') }
     it { should contain_service('foreman').with_enable('true') }
     it { should contain_file('settings.yaml').with_ensure('present') }
@@ -16,8 +17,18 @@ describe 'foreman' do
   describe 'Test passenger installation' do
     let(:params) { {:passenger => true } }
     it { should contain_package('foreman').with_ensure('present') }
+    it { should contain_package('foreman-libvirt').with_ensure('absent') }
     it { should contain_service('foreman').with_ensure('stopped') }
     it { should contain_service('foreman').with_enable('false') }
+    it { should contain_file('settings.yaml').with_ensure('present') }
+  end
+
+  describe 'Test provisioning installation' do
+    let(:params) { {:unattended => true, :absent => false } }
+    it { should contain_package('foreman').with_ensure('present') }
+    it { should contain_package('foreman-libvirt').with_ensure('present') }
+    it { should contain_service('foreman').with_ensure('running') }
+    it { should contain_service('foreman').with_enable('true') }
     it { should contain_file('settings.yaml').with_ensure('present') }
   end
 
