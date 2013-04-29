@@ -1,9 +1,6 @@
 class foreman::proxy {
   include foreman
   include foreman::repository
-  if $::foreman::bool_proxy_feature_tftp {
-    include foreman::proxy::tftp
-  }
 
   $url = "https://${::fqdn}:8443"
 

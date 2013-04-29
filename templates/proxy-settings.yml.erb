@@ -23,7 +23,7 @@
 
 # Enable TFTP management
 :tftp: <%= scope.lookupvar('foreman::bool_proxy_feature_tftp') %>
-:tftproot: <%= scope.lookupvar('foreman::proxy_tftp_data_dir') || '/var/lib/tftpboot' %>
+:tftproot: <%= scope.lookupvar('::tftp::data_dir') || '/var/lib/tftpboot' %>
 # Defines the TFTP Servername to use, overrides the name in the subnet declaration
 #:tftp_servername: tftp.domain.com
 

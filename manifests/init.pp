@@ -629,6 +629,10 @@ class foreman (
     default   => template($foreman::template_reports),
   }
 
+  if $::foreman::bool_proxy_feature_tftp {
+    include foreman::proxy::tftp
+  }
+
   $manage_proxy_file_content = $foreman::template_proxy_settings ? {
     ''        => template('foreman/proxy-settings.yml.erb'),
     default   => template($foreman::template_proxy_settings),
