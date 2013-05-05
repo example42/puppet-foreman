@@ -29,7 +29,7 @@ class foreman::proxy {
     $foreman::proxy_ssl_ca:
       ensure  => present,
       source  => $foreman::ssl_ca,
-      mode    => 0644,
+      mode    => $foreman::config_file_mode,
       owner   => $foreman::proxy_user,
       group   => $foreman::proxy_group,
       require => Package['foreman-proxy'],
@@ -38,7 +38,7 @@ class foreman::proxy {
     $foreman::proxy_ssl_cert:
       ensure  => present,
       source  => $foreman::ssl_cert,
-      mode    => 0644,
+      mode    => $foreman::config_file_mode,
       owner   => $foreman::proxy_user,
       group   => $foreman::proxy_group,
       require => Package['foreman-proxy'],
@@ -65,8 +65,8 @@ class foreman::proxy {
     ensure  => $foreman::manage_file,
     path    => $foreman::proxy_config_file,
     mode    => $foreman::config_file_mode,
-    owner   => $foreman::config_file_owner,
-    group   => $foreman::config_file_group,
+    owner   => $foreman::proxy_user,
+    group   => $foreman::proxy_user,
     require => Package['foreman-proxy'],
     notify  => Service['foreman-proxy'],
     content => $foreman::manage_proxy_file_content,

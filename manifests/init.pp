@@ -629,7 +629,7 @@ class foreman (
     default   => template($foreman::template_reports),
   }
 
-  if $::foreman::bool_proxy_feature_tftp {
+  if $foreman::bool_proxy_feature_tftp {
     include foreman::proxy::tftp
   }
 
