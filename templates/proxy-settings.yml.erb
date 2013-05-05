@@ -41,14 +41,18 @@
 # dhcp_subnets is a Native MS implementation setting. It restricts the subnets queried to a
 # subset, so as to reduce the query time.
 #:dhcp_subnets: [192.168.205.0/255.255.255.128, 192.168.205.128/255.255.255.128]
-# Settings for Ubuntu ISC
-#:dhcp_config: /etc/dhcp3/dhcpd.conf
-#:dhcp_leases: /var/lib/dhcp3/dhcpd.leases
+:dhcp_config: <%= @dhcpd_config_file %>
+:dhcp_leases: <%= @dhcpd_leases_file %>
 # Settings for Redhat ISC
 #:dhcp_config: /etc/dhcpd.conf
 #:dhcp_leases: /var/lib/dhcpd/dhcpd.leases
+<% unless @proxy_dhcp_omapi_key.empty? %>
+:dhcp_key_name: proxy_key
+:dhcp_key_secret: <%= @proxy_dhcp_omapi_key %>
+<% else %>
 #:dhcp_key_name: secret_key_name
 #:dhcp_key_secret: secret_key
+<% end %>
 
 # enable PuppetCA management
 :puppetca: <%= scope.lookupvar('foreman::bool_proxy_feature_puppetca') %>
