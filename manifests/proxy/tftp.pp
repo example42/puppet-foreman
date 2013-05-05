@@ -8,7 +8,7 @@ class foreman::proxy::tftp {
       ensure  => directory,
       owner   => $foreman::proxy_user,
       mode    => 0644,
-      require => [Package['foreman'], Package['tftp']],
+      require => [Package['foreman-proxy'], Package['tftp']],
       recurse => true;
 
     "${::tftp::data_dir}/pxelinux.0":
