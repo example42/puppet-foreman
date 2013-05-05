@@ -458,6 +458,7 @@ class foreman (
   $proxy_feature_bmc        = params_lookup( 'proxy_feature_bmc' ),
   $proxy_data_dir           = params_lookup( 'proxy_data_dir' ),
   $proxy_tftp_syslinux_dir  = params_lookup( 'proxy_tftp_syslinux_dir' ),
+  $proxy_dhcp_omapi_key     = params_lookup( 'proxy_dhcp_omapi_key' ),
   $proxy_ssl_dir            = params_lookup( 'proxy_ssl_dir' ),
   $proxy_ssl_ca             = params_lookup( 'proxy_ssl_ca' ),
   $proxy_ssl_cert           = params_lookup( 'proxy_ssl_cert' ),
@@ -627,6 +628,16 @@ class foreman (
   $manage_file_reports_content = $foreman::template_reports ? {
     ''        => template('foreman/foreman-report.rb.erb'),
     default   => template($foreman::template_reports),
+  }
+
+  if $foreman::bool_proxy_feature_tftp {
+    include foreman::proxy::tftp
+  }
+
+  if $foreman::bool_proxy_feature_dhcp {
+    include foreman::proxy::dhcp
+    $dhcpd_config_file = $::dhcpd::config_file
+    $dhcpd_leases_file = "${::dhcpd::data_dir}/dhcpd.leases"
   }
 
   $manage_proxy_file_content = $foreman::template_proxy_settings ? {
