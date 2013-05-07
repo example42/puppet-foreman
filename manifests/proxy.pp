@@ -29,7 +29,7 @@ class foreman::proxy {
     $foreman::proxy_ssl_ca:
       ensure  => present,
       source  => $foreman::ssl_ca,
-      mode    => 0644,
+      mode    => $foreman::config_file_mode,
       owner   => $foreman::proxy_user,
       group   => $foreman::proxy_group,
       require => Package['foreman-proxy'],
@@ -38,7 +38,7 @@ class foreman::proxy {
     $foreman::proxy_ssl_cert:
       ensure  => present,
       source  => $foreman::ssl_cert,
-      mode    => 0644,
+      mode    => $foreman::config_file_mode,
       owner   => $foreman::proxy_user,
       group   => $foreman::proxy_group,
       require => Package['foreman-proxy'],
@@ -72,10 +72,6 @@ class foreman::proxy {
     content => $foreman::manage_proxy_file_content,
     replace => $foreman::manage_file_replace,
     audit   => $foreman::manage_audit,
-  }
-
-  if $::foreman::bool_proxy_feature_tftp {
-    include foreman::proxy::tftp
   }
 
   $features = [
