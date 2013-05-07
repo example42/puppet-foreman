@@ -23,7 +23,7 @@ class foreman::server {
     ensure       => $foreman::manage_package,
     name         => $foreman::package,
     responsefile => $foreman::preseed_file,
-    require      => File['foreman.seeds'],
+    require      => [ Class['foreman::repository'] , File['foreman.seeds'] ],
   }
 
   case $foreman::db {
