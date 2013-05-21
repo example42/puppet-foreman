@@ -332,6 +332,12 @@
 # [*proxy_feature_dhcp*]
 #   Enable DHCP feature for the smart proxy
 #
+# [*proxy_dhcp_omapi_key*]
+#   The BASE64 encoded key to access the ISC DHCPd's OMAPI server
+#   See http://projects.theforeman.org/projects/smart-proxy/wiki/ISC_DHCP
+#   for how this is created.
+#   Leave this empty/unset to not specify a key. No OMAPI access is possible then.
+#
 # [*proxy_feature_puppetca*]
 #   Enable Puppet-CA feature for the smart proxy
 #

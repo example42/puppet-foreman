@@ -102,6 +102,8 @@ class foreman::params {
     default                   => '/usr/share/syslinux',
   }
 
+  $proxy_dhcp_omapi_key = ''
+
   # Perhaps this should be $puppet::params::db ?
   $db = 'sqlite'
 
