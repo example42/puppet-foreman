@@ -181,11 +181,11 @@ class foreman::params {
   }
 
   $process = $::operatingsystem ? {
-    default => 'foreman',
+    default => 'ruby',
   }
 
   $process_args = $::operatingsystem ? {
-    default => '',
+    default => 'rails',
   }
 
   $process_user = $::operatingsystem ? {
