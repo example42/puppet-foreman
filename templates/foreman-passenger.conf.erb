@@ -1,7 +1,7 @@
-<VirtualHost *:<%= port %>>
-  ServerName <%= name %>
-  ServerAlias <%= serveraliases %>
-  DocumentRoot <%= docroot %>
+<VirtualHost *:<%= @port %>>
+  ServerName <%= @name %>
+  ServerAlias <%= @serveraliases %>
+  DocumentRoot <%= @docroot %>
 
   RailsAutoDetect On
   AddDefaultCharset UTF-8
@@ -17,17 +17,17 @@
 </VirtualHost>
 
 <VirtualHost *:443>
-  ServerName <%= name %>
-  ServerAlias <%= serveraliases %>
+  ServerName <%= @name %>
+  ServerAlias <%= @serveraliases %>
 
   RailsAutoDetect On
-  DocumentRoot <%= docroot %>
+  DocumentRoot <%= @docroot %>
 
   # Use puppet certificates for SSL
 
   SSLEngine On
-  SSLCertificateFile /var/lib/puppet/ssl/certs/<%= fqdn %>.pem
-  SSLCertificateKeyFile /var/lib/puppet/ssl/private_keys/<%= fqdn %>.pem
+  SSLCertificateFile /var/lib/puppet/ssl/certs/<%= @fqdn %>.pem
+  SSLCertificateKeyFile /var/lib/puppet/ssl/private_keys/<%= @fqdn %>.pem
   SSLCertificateChainFile /var/lib/puppet/ssl/certs/ca.pem
   SSLCACertificateFile /var/lib/puppet/ssl/certs/ca.pem
   SSLVerifyClient optional
