@@ -100,7 +100,7 @@ class foreman::proxy {
       true  => "'BMC'"
     } ]
 
-  $where_feature = inline_template("<%= features.join(', ') %>")
+  $where_feature = inline_template("<%= @features.join(', ') %>")
 
   case $foreman::db {
     mysql   : {
