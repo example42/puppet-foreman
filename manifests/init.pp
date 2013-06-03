@@ -435,6 +435,8 @@ class foreman (
   $firewall_dst             = params_lookup( 'firewall_dst' , 'global' ),
   $debug                    = params_lookup( 'debug' , 'global' ),
   $audit_only               = params_lookup( 'audit_only' , 'global' ),
+  $repo_distro              = params_lookup( 'repo_distro' ),
+  $repo_flavour             = params_lookup( 'repo_flavour' ),
   $package                  = params_lookup( 'package' ),
   $proxy_package            = params_lookup( 'proxy_package' ),
   $service                  = params_lookup( 'service' ),

@@ -21,17 +21,13 @@ class foreman::repository inherits foreman {
     redhat,centos,fedora,Scientific: {
       file { 'foreman.repo':
         path    => '/etc/yum.repos.d/foreman.repo',
-        content => template('foreman/foreman.repo'),
+        content => template('foreman/foreman.repo.erb'),
       }
     }
 
     Debian,Ubuntu: {
-      $dist = $::operatingsystem ? {
-        'Debian' => 'squeeze',
-        'Ubuntu' => 'precise',
-      }
       file { '/etc/apt/sources.list.d/foreman.list':
-        content => "deb http://deb.theforeman.org/ ${dist} stable\n"
+        content => "deb http://deb.theforeman.org/ ${foreman::repo_distro} ${foreman::repo_flavour}\n"
       }
       ~>
       exec { 'foreman-key':
