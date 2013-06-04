@@ -10,6 +10,7 @@
 #use the following setting to override the default 30 minutes puppet run interval - value must be in minutes
 #:puppet_interval: 60
 #:document_root: /var/www
+# default user: admin:changeme
 :login: <%= scope.lookupvar('foreman::bool_authentication') %>
 :ssl_ca_file: "<%= scope.lookupvar('foreman::service_ssl_ca') -%>"
 :ssl_certificate: "<%= scope.lookupvar('foreman::service_ssl_cert') -%>"
