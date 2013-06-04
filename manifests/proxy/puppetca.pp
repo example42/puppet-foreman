@@ -7,4 +7,6 @@ class foreman::proxy::puppetca {
     group   => $foreman::proxy_group,
     require => Package['foreman-proxy'];
   }
+
+  sudo::directive { "foreman::proxy::puppetca": content => "foreman-proxy ALL=(ALL:ALL) NOPASSWD: /usr/bin/puppet cert *\n"; }
 }
