@@ -466,6 +466,7 @@ class foreman (
   $proxy_feature_bmc        = params_lookup( 'proxy_feature_bmc' ),
   $proxy_data_dir           = params_lookup( 'proxy_data_dir' ),
   $proxy_tftp_syslinux_dir  = params_lookup( 'proxy_tftp_syslinux_dir' ),
+  $proxy_tftp_servername    = params_lookup( 'proxy_tftp_servername' ),
   $proxy_dhcp_omapi_key     = params_lookup( 'proxy_dhcp_omapi_key' ),
   $proxy_ssl_dir            = params_lookup( 'proxy_ssl_dir' ),
   $proxy_ssl_ca             = params_lookup( 'proxy_ssl_ca' ),
@@ -500,6 +501,7 @@ class foreman (
   $bool_proxy_feature_puppetca=any2bool($proxy_feature_puppetca)
   $bool_proxy_feature_puppet=any2bool($proxy_feature_puppet)
   $bool_proxy_feature_bmc=any2bool($proxy_feature_bmc)
+  $bool_proxy_tftp_servername_override = $proxy_tftp_servername != ''
 
   ### Definition of some variables used in the module
   $osver = split($::operatingsystemrelease, '[.]')
