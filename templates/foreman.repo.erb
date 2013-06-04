@@ -1,0 +1,14 @@
+# File Managed by Puppet
+[foreman]
+name=Foreman Default Repository
+baseurl=http://yum.theforeman.org/<%= scope.lookupvar('foreman::repo_flavour') %>/<%= scope.lookupvar('foreman::repo_distro') %>/$basearch
+enabled=1
+gpgcheck=0
+priority=1
+
+[foreman-nightly]
+name=Foreman Nightly Builds
+baseurl=http://yum.theforeman.org/nightly/<%= scope.lookupvar('foreman::repo_distro') %>/$basearch
+enabled=0
+gpgcheck=0
+priority=1
