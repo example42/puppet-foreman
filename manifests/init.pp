@@ -640,6 +640,10 @@ class foreman (
     default   => template($foreman::template_reports),
   }
 
+  if $foreman::bool_proxy_feature_puppetca {
+    include foreman::proxy::puppetca
+  }
+
   if $foreman::bool_proxy_feature_tftp {
     include foreman::proxy::tftp
   }
