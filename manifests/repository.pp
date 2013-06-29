@@ -18,7 +18,7 @@ class foreman::repository inherits foreman {
 
   case $::operatingsystem {
 
-    redhat,centos,fedora,Scientific: {
+    redhat,centos,fedora,Scientific,OracleLinux: {
       file { 'foreman.repo':
         path    => '/etc/yum.repos.d/foreman.repo',
         content => template('foreman/foreman.repo.erb'),
