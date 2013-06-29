@@ -165,17 +165,20 @@ class foreman::params {
   }
 
   ### Application related parameters
+  
+  $osver = split($::operatingsystemrelease, '[.]')
+  $osver_maj = $osver[0]
 
   $repo_distro = $::operatingsystem ? {
     /(?i:Debian|Ubuntu|Mint)/       => $::lsbdistcodename,
-    /(?i:redhat|centos|scientific)/ => "el${foreman::osver_maj}",
-    /(?i:fedora)/                   => "f${foreman::osver_maj}",
+    /(?i:redhat|centos|scientific|oraclelinux)/ => "el${osver_maj}",
+    /(?i:fedora)/                   => "f${osver_maj}",
     default                         => 'UNKNOWN',
   }
 
   $repo_flavour = $::operatingsystem ? {
     /(?i:Debian|Ubuntu|Mint)/       => 'stable',
-    /(?i:redhat|centos|scientific)/ => 'releases/1.1',
+    /(?i:redhat|centos|scientific|oraclelinux)/ => 'releases/1.1',
     /(?i:fedora)/                   => 'releases/1.1',
     default                         => 'UNKNOWN',
   }
