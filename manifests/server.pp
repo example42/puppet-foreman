@@ -171,9 +171,16 @@ class foreman::server {
 
   # ## Service monitoring, if enabled ( monitor => true )
   if $foreman::bool_monitor == true {
-    monitor::port { "foreman_${foreman::protocol}_${foreman::port}":
+    $real_port = $foreman::bool_passenger ? {
+      true => $foreman::ssl ? {
+        true    => '443',
+        default => '80', 
+      },
+      default => $foreman::port,
+    }
+    monitor::port { "foreman_${foreman::protocol}_${real_port}":
       protocol => $foreman::protocol,
-      port     => $foreman::port,
+      port     => $real_port,
       target   => $foreman::monitor_target,
       tool     => $foreman::monitor_tool,
       enable   => $foreman::manage_monitor,
