@@ -30,6 +30,6 @@ class foreman::proxy::tftp {
       require => Package['syslinux'];
   }
 
-  # meh
-  package { ['wget', 'syslinux']: ensure => installed }
+  if ! defined(Package['wget']) { package { 'wget': ensure => present } }
+  if ! defined(Package['syslinux']) { package { 'syslinux': ensure => present } }
 }

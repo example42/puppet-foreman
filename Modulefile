@@ -1,5 +1,5 @@
 name 'example42-foreman'
-version '2.0.7'
+version '2.0.8'
 
 author 'Alessandro Franceschi'
 license 'Apache2'
@@ -15,3 +15,4 @@ dependency 'example42/firewall', '>=2.0.0'
 dependency 'example42/monitor', '>=2.0.0'
 dependency 'example42/tftp', '>=2.0.6'
 dependency 'example42/dhcpd', '>=2.0.10'
+dependency 'example42/sudo', '>=2.0.8'

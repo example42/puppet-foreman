@@ -1,6 +1,6 @@
 class foreman::proxy {
   include foreman
-  include foreman::repository
+  require foreman::repository
 
   $url = "https://${::fqdn}:8443"
 
@@ -8,6 +8,9 @@ class foreman::proxy {
     ensure => $foreman::manage_package,
     name   => $foreman::proxy_package,
   }
+
+  # explicitely manage this to get autorequires on the package for all files
+  user { $foreman::proxy_user: require => Package['foreman-proxy'] }
 
   file {
     $foreman::proxy_data_dir:
@@ -66,7 +69,7 @@ class foreman::proxy {
     path    => $foreman::proxy_config_file,
     mode    => $foreman::config_file_mode,
     owner   => $foreman::proxy_user,
-    group   => $foreman::proxy_user,
+    group   => $foreman::proxy_group,
     require => Package['foreman-proxy'],
     notify  => Service['foreman-proxy'],
     content => $foreman::manage_proxy_file_content,
@@ -100,7 +103,7 @@ class foreman::proxy {
       true  => "'BMC'"
     } ]
 
-  $where_feature = inline_template("<%= features.join(', ') %>")
+  $where_feature = inline_template("<%= @features.join(', ') %>")
 
   case $foreman::db {
     mysql   : {

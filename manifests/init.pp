@@ -332,6 +332,12 @@
 # [*proxy_feature_dhcp*]
 #   Enable DHCP feature for the smart proxy
 #
+# [*proxy_dhcp_omapi_key*]
+#   The BASE64 encoded key to access the ISC DHCPd's OMAPI server
+#   See http://projects.theforeman.org/projects/smart-proxy/wiki/ISC_DHCP
+#   for how this is created.
+#   Leave this empty/unset to not specify a key. No OMAPI access is possible then.
+#
 # [*proxy_feature_puppetca*]
 #   Enable Puppet-CA feature for the smart proxy
 #
@@ -429,6 +435,8 @@ class foreman (
   $firewall_dst             = params_lookup( 'firewall_dst' , 'global' ),
   $debug                    = params_lookup( 'debug' , 'global' ),
   $audit_only               = params_lookup( 'audit_only' , 'global' ),
+  $repo_distro              = params_lookup( 'repo_distro' ),
+  $repo_flavour             = params_lookup( 'repo_flavour' ),
   $package                  = params_lookup( 'package' ),
   $proxy_package            = params_lookup( 'proxy_package' ),
   $service                  = params_lookup( 'service' ),
@@ -458,6 +466,7 @@ class foreman (
   $proxy_feature_bmc        = params_lookup( 'proxy_feature_bmc' ),
   $proxy_data_dir           = params_lookup( 'proxy_data_dir' ),
   $proxy_tftp_syslinux_dir  = params_lookup( 'proxy_tftp_syslinux_dir' ),
+  $proxy_tftp_servername    = params_lookup( 'proxy_tftp_servername' ),
   $proxy_dhcp_omapi_key     = params_lookup( 'proxy_dhcp_omapi_key' ),
   $proxy_ssl_dir            = params_lookup( 'proxy_ssl_dir' ),
   $proxy_ssl_ca             = params_lookup( 'proxy_ssl_ca' ),
@@ -492,6 +501,7 @@ class foreman (
   $bool_proxy_feature_puppetca=any2bool($proxy_feature_puppetca)
   $bool_proxy_feature_puppet=any2bool($proxy_feature_puppet)
   $bool_proxy_feature_bmc=any2bool($proxy_feature_bmc)
+  $bool_proxy_tftp_servername_override = $proxy_tftp_servername != ''
 
   ### Definition of some variables used in the module
   $osver = split($::operatingsystemrelease, '[.]')
@@ -628,6 +638,10 @@ class foreman (
   $manage_file_reports_content = $foreman::template_reports ? {
     ''        => template('foreman/foreman-report.rb.erb'),
     default   => template($foreman::template_reports),
+  }
+
+  if $foreman::bool_proxy_feature_puppetca {
+    include foreman::proxy::puppetca
   }
 
   if $foreman::bool_proxy_feature_tftp {

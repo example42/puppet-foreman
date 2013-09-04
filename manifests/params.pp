@@ -102,6 +102,10 @@ class foreman::params {
     default                   => '/usr/share/syslinux',
   }
 
+  $proxy_tftp_servername = ''
+
+  $proxy_dhcp_omapi_key = ''
+
   # Perhaps this should be $puppet::params::db ?
   $db = 'sqlite'
 
@@ -161,6 +165,23 @@ class foreman::params {
   }
 
   ### Application related parameters
+  
+  $osver = split($::operatingsystemrelease, '[.]')
+  $osver_maj = $osver[0]
+
+  $repo_distro = $::operatingsystem ? {
+    /(?i:Debian|Ubuntu|Mint)/       => $::lsbdistcodename,
+    /(?i:redhat|centos|scientific|oraclelinux)/ => "el${osver_maj}",
+    /(?i:fedora)/                   => "f${osver_maj}",
+    default                         => 'UNKNOWN',
+  }
+
+  $repo_flavour = $::operatingsystem ? {
+    /(?i:Debian|Ubuntu|Mint)/       => 'stable',
+    /(?i:redhat|centos|scientific|oraclelinux)/ => 'releases/1.1',
+    /(?i:fedora)/                   => 'releases/1.1',
+    default                         => 'UNKNOWN',
+  }
 
   $package = $::operatingsystem ? {
     default => 'foreman',
@@ -179,11 +200,11 @@ class foreman::params {
   }
 
   $process = $::operatingsystem ? {
-    default => 'foreman',
+    default => 'ruby',
   }
 
   $process_args = $::operatingsystem ? {
-    default => '',
+    default => 'rails',
   }
 
   $process_user = $::operatingsystem ? {
