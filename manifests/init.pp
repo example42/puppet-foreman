@@ -450,6 +450,7 @@ class foreman (
   $config_file_owner        = params_lookup( 'config_file_owner' ),
   $config_file_group        = params_lookup( 'config_file_group' ),
   $config_file_init         = params_lookup( 'config_file_init' ),
+  $init_template            = params_lookup( 'init_template' ),
   $pid_file                 = params_lookup( 'pid_file' ),
   $data_dir                 = params_lookup( 'data_dir' ),
   $log_dir                  = params_lookup( 'log_dir' ),
@@ -565,9 +566,19 @@ class foreman (
   $manage_service_autorestart = $foreman::bool_passenger ? {
     true  => Service[apache],
     false => $foreman::bool_service_autorestart ? {
-	    true    => Service[foreman],
-	    false   => undef,
+            true    => Service[foreman],
+            false   => undef,
     }
+  }
+
+  $manage_file_init_source = $foreman::init_source ? {
+    '' => undef,
+    default => $foreman::init_source,
+  }
+
+  $manage_file_init_content = $foreman::init_template ? {
+    '' => undef,
+    default => template($foreman::init_template),
   }
 
   $manage_file = $foreman::bool_absent ? {
