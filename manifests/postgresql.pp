@@ -11,6 +11,7 @@ class foreman::postgresql inherits foreman {
   package { 'foreman-db':
     ensure => $foreman::manage_package,
     name   => $foreman::db_postgresql_package,
+    require => File['database.yml'],
   }
 
   case $foreman::db_server {

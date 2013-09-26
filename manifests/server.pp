@@ -68,6 +68,22 @@ class foreman::server {
     audit   => $foreman::manage_audit,
   }
 
+  if $foreman::config_file_init {
+    file { 'foreman.init.default':
+      ensure  => $foreman::manage_file,
+      path    => $foreman::config_file_init,
+      mode    => $foreman::config_file_mode,
+      owner   => $foreman::config_file_owner,
+      group   => $foreman::config_file_group,
+      require => Package['foreman'],
+      notify  => $foreman::manage_service_autorestart,
+      source  => $foreman::manage_file_init_source,
+      content => $foreman::manage_file_init_content,
+      replace => $foreman::manage_file_replace,
+      audit   => $foreman::manage_audit,
+    }
+  }
+
   # The whole foreman configuration directory can be recursively overriden
   if $foreman::source_dir {
     file { 'foreman.dir':
@@ -98,7 +114,7 @@ class foreman::server {
   # Storeconfigs
   if $foreman::bool_storeconfigs == true {
     exec { 'db-migrate':
-      command     => '/usr/bin/rake RAILS_ENV=production db:migrate',
+      command     => '/usr/bin/bundle exec rake RAILS_ENV=production db:migrate',
       cwd         => $foreman::basedir,
       require     => Service['foreman'],
       subscribe   => Package['foreman'],
@@ -174,7 +190,7 @@ class foreman::server {
     $real_port = $foreman::bool_passenger ? {
       true => $foreman::ssl ? {
         true    => '443',
-        default => '80', 
+        default => '80',
       },
       default => $foreman::port,
     }

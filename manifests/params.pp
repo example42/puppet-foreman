@@ -133,8 +133,8 @@ class foreman::params {
   }
 
   $db_sqlite_package = $::operatingsystem ? {
-    /(?i:Ubuntu)/ => 'foreman-sqlite3',
-    default       => 'foreman-sqlite',
+    /(?i:Debian|Ubuntu)/ => 'foreman-sqlite3',
+    default              => 'foreman-sqlite',
   }
 
   $basedir = $::operatingsystem ? {
@@ -165,7 +165,7 @@ class foreman::params {
   }
 
   ### Application related parameters
-  
+
   $osver = split($::operatingsystemrelease, '[.]')
   $osver_maj = $osver[0]
 
@@ -238,6 +238,10 @@ class foreman::params {
   $config_file_init = $::operatingsystem ? {
     /(?i:Debian|Ubuntu|Mint)/ => '/etc/default/foreman',
     default                   => '/etc/sysconfig/foreman',
+  }
+
+  $init_template = $::operatingsystem ? {
+    default => 'foreman/init_config.erb'
   }
 
   $pid_file = $::operatingsystem ? {
