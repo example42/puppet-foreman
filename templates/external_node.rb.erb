@@ -45,12 +45,38 @@ require 'net/http'
 require 'net/https'
 require 'fileutils'
 require 'timeout'
+require 'yaml'
+begin
+  require 'json'
+rescue LoadError
+  # Debian packaging guidelines state to avoid needing rubygems, so
+  # we only try to load it if the first require fails (for RPMs)
+  begin
+    require 'rubygems' rescue nil
+    require 'json'
+  rescue LoadError => e
+    puts "You need the `json` gem to use the Foreman ENC script"
+    # code 1 is already used below
+    exit 2
+  end
+end
 
 def upload_all_facts
   Dir["#{puppetdir}/yaml/facts/*.yaml"].each do |f|
     certname = File.basename(f, ".yaml")
-    upload_facts(certname, f)
+    # Skip empty host fact yaml files
+    if File.size(f) != 0
+      upload_facts(certname, f)
+    end
   end
+end
+
+def build_body(certname,filename)
+  # Strip the Puppet:: ruby objects and keep the plain hash
+  facts        = File.read(filename)
+  puppet_facts = YAML::load(facts.gsub(/\!ruby\/object.*$/,''))
+  hostname     = puppet_facts['values']['fqdn'] || certname
+  {'facts' => puppet_facts['values'], 'name' => hostname, 'certname' => certname}
 end
 
 def upload_facts(certname, filename)
@@ -59,13 +85,14 @@ def upload_facts(certname, filename)
   last_run = File.exists?(stat) ? File.stat(stat).mtime.utc : Time.now - 365*24*60*60
   last_fact = File.stat(filename).mtime.utc
   if last_fact > last_run
-    fact = File.read(filename)
     begin
-      uri = URI.parse("#{url}/fact_values/create?format=yml")
+      uri = URI.parse("#{url}/api/hosts/facts")
       req = Net::HTTP::Post.new(uri.request_uri)
-      req.set_form_data('facts' => fact)
-      res             = Net::HTTP.new(uri.host, uri.port)
-      res.use_ssl     = uri.scheme == 'https'
+      req.add_field('Accept', 'application/json,version=2' )
+      req.content_type = 'application/json'
+      req.body         = build_body(certname, filename).to_json
+      res              = Net::HTTP.new(uri.host, uri.port)
+      res.use_ssl      = uri.scheme == 'https'
       if res.use_ssl?
         if SETTINGS[:ssl_ca] && !SETTINGS[:ssl_ca].empty?
           res.ca_file = SETTINGS[:ssl_ca]
@@ -102,13 +129,13 @@ def enc(certname)
   http             = Net::HTTP.new(uri.host, uri.port)
   http.use_ssl     = uri.scheme == 'https'
   if http.use_ssl?
-    if SETTINGS[:ssl_ca]
+    if SETTINGS[:ssl_ca] && !SETTINGS[:ssl_ca].empty?
       http.ca_file = SETTINGS[:ssl_ca]
       http.verify_mode = OpenSSL::SSL::VERIFY_PEER
     else
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
     end
-    if SETTINGS[:ssl_cert] and SETTINGS[:ssl_key]
+    if SETTINGS[:ssl_cert] && !SETTINGS[:ssl_cert].empty? && SETTINGS[:ssl_key] && !SETTINGS[:ssl_key].empty?
       http.cert = OpenSSL::X509::Certificate.new(File.read(SETTINGS[:ssl_cert]))
       http.key  = OpenSSL::PKey::RSA.new(File.read(SETTINGS[:ssl_key]), nil)
     end
@@ -121,49 +148,51 @@ end
 
 # Actual code starts here
 
-# Setuid to puppet if we can
-begin
-  Process::GID.change_privilege(Etc.getgrnam('puppet').gid) unless Etc.getpwuid.name == 'puppet'
-  Process::UID.change_privilege(Etc.getpwnam('puppet').uid) unless Etc.getpwuid.name == 'puppet'
-rescue
-  $stderr.puts "cannot switch to user 'puppet', continuing as '#{Etc.getpwuid.name}'"
-end
-
-begin
-  no_env = ARGV.delete("--no-environment")
-  if ARGV.delete("--push-facts")
-    # push all facts files to Foreman and don't act as an ENC
-    upload_all_facts
-  else
-    certname = ARGV[0] || raise("Must provide certname as an argument")
-    # send facts to Foreman - enable 'facts' setting to activate
-    # if you use this option below, make sure that you don't send facts to foreman via the rake task or push facts alternatives.
-    #
-    if SETTINGS[:facts]
-      upload_facts certname, "#{puppetdir}/yaml/facts/#{certname}.yaml"
-    end
-    #
-    # query External node
-    begin
-      result = ""
-      timeout(tsecs) do
-        result = enc(certname)
-        cache(certname, result)
-      end
-    rescue TimeoutError, SocketError, Errno::EHOSTUNREACH
-      # Read from cache, we got some sort of an error.
-      result = read_cache(certname)
-    ensure
-      require 'yaml'
-      yaml = YAML.load(result)
-      if no_env
-        yaml.delete('environment')
-      end
-      # Always reset the result to back to clean yaml on our end
-      puts yaml.to_yaml
-    end
+if __FILE__ == $0 then
+  # Setuid to puppet if we can
+  begin
+    Process::GID.change_privilege(Etc.getgrnam('puppet').gid) unless Etc.getpwuid.name == 'puppet'
+    Process::UID.change_privilege(Etc.getpwnam('puppet').uid) unless Etc.getpwuid.name == 'puppet'
+  rescue
+    $stderr.puts "cannot switch to user 'puppet', continuing as '#{Etc.getpwuid.name}'"
   end
-rescue => e
-  warn e
-  exit 1
+
+  begin
+    no_env = ARGV.delete("--no-environment")
+    if ARGV.delete("--push-facts")
+      # push all facts files to Foreman and don't act as an ENC
+      upload_all_facts
+    else
+      certname = ARGV[0] || raise("Must provide certname as an argument")
+      # send facts to Foreman - enable 'facts' setting to activate
+      # if you use this option below, make sure that you don't send facts to foreman via the rake task or push facts alternatives.
+      #
+      if SETTINGS[:facts]
+        upload_facts certname, "#{puppetdir}/yaml/facts/#{certname}.yaml"
+      end
+      #
+      # query External node
+      begin
+        result = ""
+        timeout(tsecs) do
+          result = enc(certname)
+          cache(certname, result)
+        end
+      rescue TimeoutError, SocketError, Errno::EHOSTUNREACH, Errno::ECONNREFUSED
+        # Read from cache, we got some sort of an error.
+        result = read_cache(certname)
+      ensure
+        require 'yaml'
+        yaml = YAML.load(result)
+        if no_env
+          yaml.delete('environment')
+        end
+        # Always reset the result to back to clean yaml on our end
+        puts yaml.to_yaml
+      end
+    end
+  rescue => e
+    warn e
+    exit 1
+  end
 end
