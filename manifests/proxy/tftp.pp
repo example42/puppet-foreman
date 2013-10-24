@@ -1,3 +1,5 @@
+# Class foreman::proxy::tftp
+#
 class foreman::proxy::tftp {
   include ::tftp
 

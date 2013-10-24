@@ -126,46 +126,46 @@ class foreman::server {
     file {
       $foreman::service_data_dir:
         ensure  => directory,
-        mode    => 0755,
+        mode    => '0755',
         owner   => $foreman::service_user,
         group   => $foreman::service_group,
         require => Package['foreman'],
         notify  => $foreman::manage_service_autorestart;
 
       $foreman::service_ssl_dir:
-        ensure => directory,
-        mode   => 0755,
-        owner  => $foreman::service_user,
-        group  => $foreman::service_group,
+        ensure  => directory,
+        mode    => '0755',
+        owner   => $foreman::service_user,
+        group   => $foreman::service_group,
         require => Package['foreman'],
-        notify => $foreman::manage_service_autorestart;
+        notify  => $foreman::manage_service_autorestart;
 
       $foreman::service_ssl_ca:
-        ensure => present,
-        source => $foreman::ssl_ca,
-        mode   => 0644,
-        owner  => $foreman::service_user,
-        group  => $foreman::service_group,
+        ensure  => present,
+        source  => $foreman::ssl_ca,
+        mode    => '0644',
+        owner   => $foreman::service_user,
+        group   => $foreman::service_group,
         require => Package['foreman'],
-        notify => $foreman::manage_service_autorestart;
+        notify  => $foreman::manage_service_autorestart;
 
       $foreman::service_ssl_cert:
-        ensure => present,
-        source => $foreman::ssl_cert,
-        mode   => 0644,
-        owner  => $foreman::service_user,
-        group  => $foreman::service_group,
+        ensure  => present,
+        source  => $foreman::ssl_cert,
+        mode    => '0644',
+        owner   => $foreman::service_user,
+        group   => $foreman::service_group,
         require => Package['foreman'],
-        notify => $foreman::manage_service_autorestart;
+        notify  => $foreman::manage_service_autorestart;
 
       $foreman::service_ssl_key:
-        ensure => present,
-        source => $foreman::ssl_key,
-        mode   => 0600,
-        owner  => $foreman::service_user,
-        group  => $foreman::service_group,
+        ensure  => present,
+        source  => $foreman::ssl_key,
+        mode    => '0600',
+        owner   => $foreman::service_user,
+        group   => $foreman::service_group,
         require => Package['foreman'],
-        notify => $foreman::manage_service_autorestart;
+        notify  => $foreman::manage_service_autorestart;
     }
   }
 

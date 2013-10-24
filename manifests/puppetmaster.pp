@@ -39,10 +39,10 @@ class foreman::puppetmaster {
     # distribute cronjob randomly
     $tmp_cron_minute = fqdn_rand(5, 5)
 
-    cron { "foreman::push_facts":
-      ensure => $foreman::manage_file,
+    cron { 'foreman::push_facts':
+      ensure  => $foreman::manage_file,
       command => "${foreman::puppet_config_dir}/push_facts.rb",
-      minute => [
+      minute  => [
         $tmp_cron_minute,
         $tmp_cron_minute + 5,
         $tmp_cron_minute + 10,
