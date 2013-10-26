@@ -26,7 +26,7 @@ class foreman::puppetmaster {
   # Upload facts
   if ($foreman::bool_facts == true and $foreman::bool_storeconfigs == false) {
     file { 'push_facts.rb':
-      ensure  => $foreman::manage_file,
+      ensure  => $foreman::manage_file_facts,
       path    => "${foreman::puppet_config_dir}/push_facts.rb",
       mode    => $foreman::script_file_mode,
       owner   => $foreman::puppet_config_file_owner,
@@ -40,7 +40,7 @@ class foreman::puppetmaster {
     $tmp_cron_minute = fqdn_rand(5, 5)
 
     cron { 'foreman::push_facts':
-      ensure  => $foreman::manage_file,
+      ensure  => $foreman::manage_file_facts,
       command => "${foreman::puppet_config_dir}/push_facts.rb",
       minute  => [
         $tmp_cron_minute,
