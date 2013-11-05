@@ -1,12 +1,15 @@
-<VirtualHost *:<%= @port %>>
+# File managed by Puppet
+
+<VirtualHost *:<%=@port%> >
   ServerName <%= @name %>
   ServerAlias <%= @serveraliases %>
-  DocumentRoot <%= @docroot %>
 
   RailsAutoDetect On
   AddDefaultCharset UTF-8
 
-# Grant access to puppet reports
+  DocumentRoot <%= @docroot %>
+
+  # Grant access to puppet reports
   Alias /report /var/lib/puppet/rrd/
   <Directory /var/lib/puppet/rrd/>
     PassengerEnabled off
@@ -14,17 +17,9 @@
     Order deny,allow
     Allow from all
   </Directory>
-</VirtualHost>
 
-<VirtualHost *:443>
-  ServerName <%= @name %>
-  ServerAlias <%= @serveraliases %>
-
-  RailsAutoDetect On
-  DocumentRoot <%= @docroot %>
-
+<% if @ssl %>
   # Use puppet certificates for SSL
-
   SSLEngine On
   SSLCertificateFile /var/lib/puppet/ssl/certs/<%= @fqdn %>.pem
   SSLCertificateKeyFile /var/lib/puppet/ssl/private_keys/<%= @fqdn %>.pem
@@ -33,5 +28,6 @@
   SSLVerifyClient optional
   SSLOptions +StdEnvVars
   SSLVerifyDepth 3
+<% end %>
 
 </VirtualHost>
