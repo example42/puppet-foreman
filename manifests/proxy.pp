@@ -2,6 +2,47 @@ class foreman::proxy {
   include foreman
   require foreman::repository
 
+  $manage_proxy_service_enable = $foreman::bool_disableboot ? {
+    true    => false,
+    default => $foreman::bool_disable ? {
+      true    => false,
+      default => $foreman::bool_absent ? {
+        true  => false,
+        false => true,
+      },
+    },
+  }
+
+  $manage_proxy_service_ensure = $foreman::bool_disable ? {
+    true    => 'stopped',
+    default =>  $foreman::bool_absent ? {
+      true    => 'stopped',
+      default => 'running',
+    },
+  }
+
+  if $foreman::bool_proxy_feature_puppetca {
+    require ::sudo
+    include foreman::proxy::puppetca
+  }
+
+  if $foreman::bool_proxy_feature_tftp {
+    require ::tftp
+    include foreman::proxy::tftp
+  }
+
+  if $foreman::bool_proxy_feature_dhcp {
+    require ::dhcpd
+    include foreman::proxy::dhcp
+    $dhcpd_config_file = $::dhcpd::config_file
+    $dhcpd_leases_file = "${::dhcpd::data_dir}/dhcpd.leases"
+  }
+
+  $manage_proxy_file_content = $foreman::template_proxy_settings ? {
+    ''      => template('foreman/proxy-settings.yml.erb'),
+    default => template($foreman::template_proxy_settings),
+  }
+
   $url = "https://${::fqdn}:8443"
 
   package { 'foreman-proxy':
@@ -58,8 +99,8 @@ class foreman::proxy {
   }
 
   service { 'foreman-proxy':
-    ensure    => $foreman::manage_proxy_service_ensure,
-    enable    => $foreman::manage_proxy_service_enable,
+    ensure    => $manage_proxy_service_ensure,
+    enable    => $manage_proxy_service_enable,
     hasstatus => true,
     require   => Package['foreman-proxy'],
   }

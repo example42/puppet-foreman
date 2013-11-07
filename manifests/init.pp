@@ -552,25 +552,6 @@ class foreman (
     },
   }
 
-  $manage_proxy_service_enable = $foreman::bool_disableboot ? {
-    true    => false,
-    default => $foreman::bool_disable ? {
-      true    => false,
-      default => $foreman::bool_absent ? {
-        true  => false,
-        false => true,
-      },
-    },
-  }
-
-  $manage_proxy_service_ensure = $foreman::bool_disable ? {
-    true    => 'stopped',
-    default =>  $foreman::bool_absent ? {
-      true    => 'stopped',
-      default => 'running',
-    },
-  }
-
   $manage_service_autorestart = $foreman::bool_passenger ? {
     true  => Service[apache],
     false => $foreman::bool_service_autorestart ? {
@@ -673,25 +654,6 @@ class foreman (
     default   => template($foreman::template_reports),
   }
 
-  if $foreman::bool_proxy_feature_puppetca {
-    include foreman::proxy::puppetca
-  }
-
-  if $foreman::bool_proxy_feature_tftp {
-    include foreman::proxy::tftp
-  }
-
-  if $foreman::bool_proxy_feature_dhcp {
-    include foreman::proxy::dhcp
-    $dhcpd_config_file = $::dhcpd::config_file
-    $dhcpd_leases_file = "${::dhcpd::data_dir}/dhcpd.leases"
-  }
-
-  $manage_proxy_file_content = $foreman::template_proxy_settings ? {
-    ''        => template('foreman/proxy-settings.yml.erb'),
-    default   => template($foreman::template_proxy_settings),
-  }
-
   $manage_require_package = $foreman::install_mode ? {
     'all'    => Package['foreman'],
     'server' => Package['foreman'],
@@ -711,6 +673,4 @@ class foreman (
   or $foreman::install_mode == 'puppetmaster' {
     include foreman::puppetmaster
   }
-
-
 }

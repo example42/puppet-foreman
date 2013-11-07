@@ -1,8 +1,8 @@
 # Class foreman::proxy::tftp
 #
 class foreman::proxy::tftp {
-  include ::tftp
 
+  Class['tftp'] ->
   file {
     [
       "${::tftp::data_dir}/pxelinux.cfg",
