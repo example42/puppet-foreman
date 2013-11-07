@@ -53,8 +53,14 @@
 #   Should foreman act as an external node classifier
 #   (manage puppet class assignments)
 #
+# [*enc_api*]
+#   Should foreman use v1 or v2 API in enc script
+#
 # [*reports*]
 #   Should foreman receive reports from puppet
+#
+# [*reports_api*]
+#   Should foreman use v1 or v2 API in reports script
 #
 # [*facts*]
 #   Should foreman recive facts from puppet
@@ -373,7 +379,9 @@ class foreman (
   $bindaddress              = params_lookup( 'bindaddress' ),
   $environments             = params_lookup( 'environments' ),
   $enc                      = params_lookup( 'enc' ),
+  $enc_api                  = params_lookup( 'enc_api' ),
   $reports                  = params_lookup( 'reports' ),
+  $reports_api              = params_lookup( 'reports_api' ),
   $rubysitedir              = params_lookup( 'rubysitedir', 'global' ),
   $facts                    = params_lookup( 'facts' ),
   $storeconfigs             = params_lookup( 'storeconfigs' ),
@@ -572,18 +580,26 @@ class foreman (
   }
 
   $manage_file_init_source = $foreman::init_source ? {
-    '' => undef,
+    ''      => undef,
     default => $foreman::init_source,
   }
 
   $manage_file_init_content = $foreman::init_template ? {
-    '' => undef,
+    ''      => undef,
     default => template($foreman::init_template),
   }
 
   $manage_file = $foreman::bool_absent ? {
     true    => 'absent',
     default => 'present',
+  }
+
+  $manage_file_facts = $foreman::bool_absent ? {
+    true    => 'absent',
+    default => $foreman::enc_api ? {
+      'v2'    => 'absent',
+      default => 'present',
+    },
   }
 
   if $foreman::bool_absent == true
@@ -627,7 +643,10 @@ class foreman (
   }
 
   $manage_file_enc_content = $foreman::template_enc ? {
-    ''        => template('foreman/external_node.rb.erb'),
+    ''        => $foreman::enc_api ? {
+      'v1' => template('foreman/external_node.rb.erb'),
+      'v2' => template('foreman/external_node_v2.rb.erb'),
+    },
     default   => template($foreman::template_enc),
   }
 
@@ -647,7 +666,10 @@ class foreman (
   }
 
   $manage_file_reports_content = $foreman::template_reports ? {
-    ''        => template('foreman/foreman-report.rb.erb'),
+    ''        => $foreman::reports_api ? {
+      'v1' => template('foreman/foreman-report.rb.erb'),
+      'v2' => template('foreman/foreman-report_v2.rb.erb'),
+    },
     default   => template($foreman::template_reports),
   }
 

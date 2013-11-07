@@ -14,14 +14,26 @@ class foreman::passenger {
     require => Class['foreman'],
   }
 
-  apache::vhost { 'foreman':
-    name           => $foreman::vhost_servername,
-    serveraliases  => $foreman::vhost_aliases,
-    port           => '80',
-    priority       => '20',
-    docroot        => "${foreman::basedir}/public/",
-    ssl            => true,
-    template       => $foreman::manage_file_passenger_path,
+  if any2bool($foreman::ssl) {
+    apache::vhost { 'foreman':
+      name           => $foreman::vhost_servername,
+      serveraliases  => $foreman::vhost_aliases,
+      port           => '443',
+      priority       => '20',
+      docroot        => "${foreman::basedir}/public/",
+      ssl            => true,
+      template       => $foreman::manage_file_passenger_path,
+    }
+  } else {
+    apache::vhost { 'foreman':
+      name           => $foreman::vhost_servername,
+      serveraliases  => $foreman::vhost_aliases,
+      port           => '80',
+      priority       => '20',
+      docroot        => "${foreman::basedir}/public/",
+      ssl            => false,
+      template       => $foreman::manage_file_passenger_path,
+    }
   }
 
 }

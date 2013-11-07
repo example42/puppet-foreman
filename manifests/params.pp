@@ -50,8 +50,10 @@ class foreman::params {
 
   # Perhaps this should be $puppet::params::nodetool == 'foreman' ?
   $enc = true
+  $enc_api = 'v2'
 
   $reports = true
+  $reports_api = 'v2'
 
   $facts = true
 
