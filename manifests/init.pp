@@ -624,10 +624,7 @@ class foreman (
   }
 
   $manage_file_enc_content = $foreman::template_enc ? {
-    ''        => $foreman::enc_api ? {
-      'v1' => template('foreman/external_node.rb.erb'),
-      'v2' => template('foreman/external_node_v2.rb.erb'),
-    },
+    ''        => template("foreman/external_node_${enc_api}.rb.erb"),
     default   => template($foreman::template_enc),
   }
 
@@ -647,10 +644,7 @@ class foreman (
   }
 
   $manage_file_reports_content = $foreman::template_reports ? {
-    ''        => $foreman::reports_api ? {
-      'v1' => template('foreman/foreman-report.rb.erb'),
-      'v2' => template('foreman/foreman-report_v2.rb.erb'),
-    },
+    ''        => template("foreman/foreman-report_${enc_api}.rb.erb"),
     default   => template($foreman::template_reports),
   }
 
