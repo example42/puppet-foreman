@@ -163,7 +163,7 @@ class foreman::params {
   $template_proxy_settings = ''
 
   $script_file_mode = $::operatingsystem ? {
-    default => '0550',
+    default => '0551',
   }
 
   ### Application related parameters
