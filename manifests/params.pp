@@ -34,14 +34,12 @@ class foreman::params {
 
   # Perhaps this should be $puppet::params:config_file_owner ?
   $puppet_config_file_owner = $::operatingsystem ? {
-    /(?i:Debian|Ubuntu|Mint)/ => 'puppet',
-    default                   => 'root',
+    default                   => 'puppet',
   }
 
   # Perhaps this should be $puppet::params:config_file_group ?
   $puppet_config_file_group = $::operatingsystem ? {
-    /(?i:Debian|Ubuntu|Mint)/ => 'puppet',
-    default                   => 'root',
+    default                   => 'puppet',
   }
 
   $bindaddress = '0.0.0.0'
