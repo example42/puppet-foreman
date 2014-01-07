@@ -113,7 +113,7 @@ class foreman::proxy {
     group   => $foreman::proxy_group,
     require => Package['foreman-proxy'],
     notify  => Service['foreman-proxy'],
-    content => $foreman::manage_proxy_file_content,
+    content => $foreman::proxy::manage_proxy_file_content,
     replace => $foreman::manage_file_replace,
     audit   => $foreman::manage_audit,
   }

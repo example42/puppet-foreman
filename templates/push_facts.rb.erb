@@ -50,7 +50,7 @@ Dir["#{puppetdir}/yaml/facts/*.yaml"].each do |filename|
   last_fact = File.stat(filename).mtime.utc
   if last_fact > last_run
     fact = File.read(filename)
-    puts "Importing #{filename}"
+    # puts "Importing #{filename}"
     begin
       uri = URI.parse(url)
       req = Net::HTTP::Post.new("/fact_values/create?format=yml")
