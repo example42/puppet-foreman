@@ -458,6 +458,7 @@ class foreman (
   $config_file_owner        = params_lookup( 'config_file_owner' ),
   $config_file_group        = params_lookup( 'config_file_group' ),
   $config_file_init         = params_lookup( 'config_file_init' ),
+  $init_source              = params_lookup( 'init_source' ),
   $init_template            = params_lookup( 'init_template' ),
   $pid_file                 = params_lookup( 'pid_file' ),
   $data_dir                 = params_lookup( 'data_dir' ),
