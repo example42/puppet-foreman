@@ -2,7 +2,7 @@
 #
 class foreman::proxy::tftp {
 
-  Class['tftp'] ->
+  Class['::tftp'] ->
   file {
     [
       "${::tftp::data_dir}/pxelinux.cfg",
