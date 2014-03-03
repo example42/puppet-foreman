@@ -127,7 +127,7 @@ class foreman::params {
   $db_root_password = ''
 
   $db_mysql_package = $::operatingsystem ? {
-    default => 'foreman-mysql',
+    default => 'foreman-mysql2',
   }
 
   $db_postgresql_package = $::operatingsystem ? {
