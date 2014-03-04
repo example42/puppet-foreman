@@ -27,10 +27,12 @@ class foreman::server {
   }
 
   case $foreman::db {
-    mysql      : { include foreman::mysql }
-    postgresql : { include foreman::postgresql }
-    default    : { include foreman::sqlite }
+    mysql      : { $foreman_backend_class = '::foreman::mysql' }
+    postgresql : { $foreman_backend_class = '::foreman::postgresql' }
+    default    : { $foreman_backend_class = '::foreman::sqlite' }
   }
+
+  include $foreman_backend_class
 
   service { 'foreman':
     ensure    => $foreman::manage_service_ensure,
@@ -116,7 +118,7 @@ class foreman::server {
     exec { 'db-migrate':
       command     => '/usr/bin/bundle exec rake RAILS_ENV=production db:migrate',
       cwd         => $foreman::basedir,
-      require     => Service['foreman'],
+      require     => [ Service['foreman'] , Class[$foreman_backend_class] ],
       subscribe   => Package['foreman'],
       refreshonly => true,
     }
