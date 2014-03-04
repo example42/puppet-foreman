@@ -21,8 +21,8 @@
 <% if @ssl %>
   # Use puppet certificates for SSL
   SSLEngine On
-  SSLCertificateFile /var/lib/puppet/ssl/certs/<%= @fqdn %>.pem
-  SSLCertificateKeyFile /var/lib/puppet/ssl/private_keys/<%= @fqdn %>.pem
+  SSLCertificateFile <%= scope.lookupvar('foreman::ssl_cert') %>
+  SSLCertificateKeyFile <%= scope.lookupvar('foreman::ssl_key') %>
   SSLCertificateChainFile /var/lib/puppet/ssl/certs/ca.pem
   SSLCACertificateFile /var/lib/puppet/ssl/certs/ca.pem
   SSLVerifyClient optional
