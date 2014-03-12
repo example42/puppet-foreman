@@ -26,6 +26,16 @@ class foreman::server {
     require      => [ Class['foreman::repository'] , File['foreman.seeds'] ],
   }
 
+  user { 'foreman':
+    ensure  => 'present',
+    shell   => '/sbin/nologin',
+    comment => 'Foreman',
+    home    => '/usr/share/foreman',
+    gid     => 'foreman',
+    groups  => [ 'puppet' ],
+    before  => Service['foreman'],
+  }
+
   case $foreman::db {
     mysql      : { $foreman_backend_class = '::foreman::mysql' }
     postgresql : { $foreman_backend_class = '::foreman::postgresql' }

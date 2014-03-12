@@ -1,3 +1,5 @@
+# File managed by Puppet
+
 # Start foreman on boot?
 START=<% if scope.lookupvar('foreman::manage_service_enable') == true -%>yes<% else -%>no<% end %>
 
