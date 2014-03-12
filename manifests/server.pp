@@ -28,7 +28,7 @@ class foreman::server {
 
   user { 'foreman':
     ensure  => 'present',
-    shell   => '/sbin/nologin',
+    shell   => '/usr/sbin/nologin',
     comment => 'Foreman',
     home    => '/usr/share/foreman',
     gid     => 'foreman',
@@ -131,6 +131,7 @@ class foreman::server {
       require     => [ Service['foreman'] , Class[$foreman_backend_class] ],
       subscribe   => Package['foreman'],
       refreshonly => true,
+      user        => 'foreman',
     }
   }
 
