@@ -25,7 +25,7 @@
   SSLCertificateKeyFile <%= scope.lookupvar('foreman::ssl_key') %>
   SSLCertificateChainFile /var/lib/puppet/ssl/certs/ca.pem
   SSLCACertificateFile /var/lib/puppet/ssl/certs/ca.pem
-#  SSLVerifyClient optional
+  SSLVerifyClient optional
   SSLOptions +StdEnvVars
   SSLVerifyDepth 3
 <% end %>
