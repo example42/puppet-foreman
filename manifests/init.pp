@@ -62,7 +62,7 @@
 # [*reports_api*]
 #   Should foreman use v1 or v2 API in reports script
 #
-# [*facts*]
+# [*foreman_facts*]
 #   Should foreman recive facts from puppet
 #
 # [*storeconfigs*]
@@ -383,7 +383,7 @@ class foreman (
   $reports                  = params_lookup( 'reports' ),
   $reports_api              = params_lookup( 'reports_api' ),
   $rubysitedir              = params_lookup( 'rubysitedir', 'global' ),
-  $facts                    = params_lookup( 'facts' ),
+  $foreman_facts            = params_lookup( 'foreman_facts' ),
   $storeconfigs             = params_lookup( 'storeconfigs' ),
   $unattended               = params_lookup( 'unattended' ),
   $authentication           = params_lookup( 'authentication' ),
@@ -489,7 +489,7 @@ class foreman (
   $bool_install_proxy=any2bool($install_proxy)
   $bool_enc=any2bool($enc)
   $bool_reports=any2bool($reports)
-  $bool_facts=any2bool($facts)
+  $bool_facts=any2bool($foreman_facts)
   $bool_storeconfigs=any2bool($storeconfigs)
   $bool_unattended=any2bool($unattended)
   $bool_authentication=any2bool($authentication)

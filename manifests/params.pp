@@ -53,7 +53,7 @@ class foreman::params {
   $reports = true
   $reports_api = 'v2'
 
-  $facts = true
+  $foreman_facts = true
 
   # Perhaps this should be $puppet::params::storeconfigs ?
   $storeconfigs = false
