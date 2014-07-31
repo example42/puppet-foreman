@@ -21,6 +21,18 @@ describe 'foreman' do
     it { should contain_service('foreman').with_ensure('stopped') }
     it { should contain_service('foreman').with_enable('false') }
     it { should contain_file('settings.yaml').with_ensure('present') }
+    it { should contain_apache__vhost('foreman').with_ssl('true') }
+    it { should contain_apache__vhost('foreman').with_port('443') }
+  end
+
+  describe 'Test passenger installation with SSL' do
+    let(:params) { {
+      :passenger => true,
+      :ssl       => false,
+    } }
+
+    it { should contain_apache__vhost('foreman').with_ssl('false') }
+    it { should contain_apache__vhost('foreman').with_port('80') }
   end
 
   describe 'Test provisioning installation' do
@@ -55,7 +67,7 @@ describe 'foreman' do
   describe 'Test decommissioning - absent' do
     let(:params) { {:absent => true, :monitor => true , :firewall => true, :port => '42', :protocol => 'tcp'} }
 
-    it 'should remove Package[foreman]' do should contain_package('foreman').with_ensure('absent') end 
+    it 'should remove Package[foreman]' do should contain_package('foreman').with_ensure('absent') end
     it 'should stop Service[foreman]' do should contain_service('foreman').with_ensure('stopped') end
     it 'should not enable at boot Service[foreman]' do should contain_service('foreman').with_enable('false') end
     it 'should remove foreman configuration file' do should contain_file('settings.yaml').with_ensure('absent') end
@@ -84,7 +96,7 @@ describe 'foreman' do
 
   describe 'Test decommissioning - disableboot' do
     let(:params) { {:disableboot => true, :monitor => true , :firewall => true, :port => '42', :protocol => 'tcp'} }
-  
+
     it { should contain_package('foreman').with_ensure('present') }
     it { should_not contain_service('foreman').with_ensure('present') }
     it { should_not contain_service('foreman').with_ensure('absent') }
@@ -96,7 +108,7 @@ describe 'foreman' do
     it 'should keep a firewall rule' do
       should contain_firewall('foreman_tcp_42').with_enable(true)
     end
-  end 
+  end
 
   describe 'Test customizations - template' do
     let(:params) { {:template => "foreman/spec.erb" , :options => { 'opt_a' => 'value_a' } } }
@@ -176,7 +188,7 @@ describe 'foreman' do
     it 'should generate firewall resources' do
       should contain_firewall('foreman_tcp_42').with_tool("iptables")
     end
-    it 'should generate puppi resources ' do 
+    it 'should generate puppi resources ' do
       should contain_puppi__ze('foreman').with_ensure("present")
     end
   end
