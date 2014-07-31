@@ -28,7 +28,7 @@ describe 'foreman' do
   describe 'Test passenger installation with SSL' do
     let(:params) { {
       :passenger => true,
-      :ssl       => false,
+      :ssl       => 'no',
     } }
 
     it { should contain_apache__vhost('foreman').with_ssl('false') }
