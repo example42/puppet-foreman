@@ -88,11 +88,13 @@ class foreman::params {
   $service_user     = 'foreman'
   $service_group    = 'foreman'
 
-  $proxy_data_dir = '/var/lib/foreman-proxy'
-  $proxy_ssl_dir  = "${proxy_data_dir}/ssl"
-  $proxy_ssl_ca   = "${proxy_ssl_dir}/ca.pem"
-  $proxy_ssl_cert = "${proxy_ssl_dir}/${::fqdn}.pem"
-  $proxy_ssl_key  = "${proxy_ssl_dir}/${::fqdn}.key.pem"
+  $proxy_data_dir    = '/var/lib/foreman-proxy'
+  $proxy_ssl_dir     = "${proxy_data_dir}/ssl"
+  $proxy_ssl_ca      = "${proxy_ssl_dir}/ca.pem"
+  $proxy_ssl_cert    = "${proxy_ssl_dir}/${::fqdn}.pem"
+  $proxy_ssl_key     = "${proxy_ssl_dir}/${::fqdn}.key.pem"
+  $proxy_listen_port = '8443'
+  $proxy_listen_name = 'port'
 
   $proxy_user     = 'foreman-proxy'
   $proxy_group    = 'foreman-proxy'
