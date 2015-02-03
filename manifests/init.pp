@@ -482,6 +482,8 @@ class foreman (
   $proxy_ssl_ca             = params_lookup( 'proxy_ssl_ca' ),
   $proxy_ssl_cert           = params_lookup( 'proxy_ssl_cert' ),
   $proxy_ssl_key            = params_lookup( 'proxy_ssl_key' ),
+  $proxy_listen_name        = params_lookup( 'proxy_listen_name' ),
+  $proxy_listen_port        = params_lookup( 'proxy_listen_port' ),
   $proxy_user               = params_lookup( 'proxy_user' ),
   $proxy_group              = params_lookup( 'proxy_group' )
   ) inherits foreman::params {
