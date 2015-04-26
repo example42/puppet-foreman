@@ -1,3 +1,4 @@
+#
 class foreman::proxy {
   include foreman
   require foreman::repository
@@ -56,7 +57,7 @@ class foreman::proxy {
   file {
     $foreman::proxy_data_dir:
       ensure  => directory,
-      mode    => 0755,
+      mode    => '0755',
       owner   => $foreman::proxy_user,
       group   => $foreman::proxy_group,
       require => Package['foreman-proxy'],
@@ -64,7 +65,7 @@ class foreman::proxy {
 
     $foreman::proxy_ssl_dir:
       ensure  => directory,
-      mode    => 0755,
+      mode    => '0755',
       owner   => $foreman::proxy_user,
       group   => $foreman::proxy_group,
       require => Package['foreman-proxy'],
@@ -91,7 +92,7 @@ class foreman::proxy {
     $foreman::proxy_ssl_key:
       ensure  => present,
       source  => $foreman::ssl_key,
-      mode    => 0600,
+      mode    => '0600',
       owner   => $foreman::proxy_user,
       group   => $foreman::proxy_group,
       require => Package['foreman-proxy'],

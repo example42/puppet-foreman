@@ -9,7 +9,7 @@
 #
 class foreman::sqlite inherits foreman {
   package { 'foreman-db':
-    ensure  => $foreman::manage_package,
-    name    => $foreman::db_sqlite_package,
+    ensure => $foreman::manage_package,
+    name   => $foreman::db_sqlite_package,
   }
 }

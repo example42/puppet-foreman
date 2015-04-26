@@ -19,13 +19,13 @@ class foreman::passenger {
     false => '80',
   }
   apache::vhost { 'foreman':
-    name           => $foreman::vhost_servername,
-    serveraliases  => $foreman::vhost_aliases,
-    port           => $manage_apache_vhost_port,
-    priority       => '20',
-    docroot        => "${foreman::basedir}/public/",
-    ssl            => $foreman::bool_ssl,
-    template       => $foreman::manage_file_passenger_path,
+    name          => $foreman::vhost_servername,
+    serveraliases => $foreman::vhost_aliases,
+    port          => $manage_apache_vhost_port,
+    priority      => '20',
+    docroot       => "${foreman::basedir}/public/",
+    ssl           => $foreman::bool_ssl,
+    template      => $foreman::manage_file_passenger_path,
   }
 
 }

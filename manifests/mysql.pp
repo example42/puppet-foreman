@@ -10,8 +10,8 @@
 class foreman::mysql inherits foreman {
 
   package { 'foreman-db':
-    ensure  => $foreman::manage_package,
-    name    => $foreman::db_mysql_package,
+    ensure => $foreman::manage_package,
+    name   => $foreman::db_mysql_package,
   }
 
   # Grants management
