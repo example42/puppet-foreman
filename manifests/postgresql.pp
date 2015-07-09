@@ -19,7 +19,7 @@ class foreman::postgresql inherits foreman {
       postgresql::dbcreate { $foreman::db_name:
         role     => $foreman::db_user,
         password => $foreman::db_password,
-        address  => $foreman::db_server,
+        address  => '127.0.0.1/32'
         before   => Package['foreman-db'],
       }
     }
