@@ -28,7 +28,7 @@ class foreman::postgresql inherits foreman {
         role     => $foreman::db_user,
         password => $foreman::db_password,
         address  => $foreman::db_server,
-        tag      => "mysql_grants_${foreman::db_server}",
+        tag      => "postgresql_grants_${foreman::db_server}",
       }
     }
   }
