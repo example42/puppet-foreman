@@ -4,7 +4,7 @@ describe 'foreman' do
 
   let(:title) { 'foreman' }
   let(:node) { 'rspec.example42.com' }
-  let(:facts) { { :ipaddress => '10.42.42.42', :operatingsystem => 'Debian' } }
+  let(:facts) { { :ipaddress => '10.42.42.42', :operatingsystem => 'Debian', :operatingsystemrelease => '6.6' } }
 
   describe 'Test standard installation' do
     it { should contain_package('foreman').with_ensure('present') }
@@ -194,7 +194,7 @@ describe 'foreman' do
   end
 
   describe 'Test params lookup' do
-    let(:facts) { { :monitor => true , :ipaddress => '10.42.42.42' , :operatingsystem => 'Debian' } }
+    let(:facts) { { :monitor => true , :ipaddress => '10.42.42.42' , :operatingsystem => 'Debian', :operatingsystemrelease => '6.6' } }
     let(:params) { { :port => '42' } }
 
     it 'should honour top scope global vars' do
@@ -203,7 +203,7 @@ describe 'foreman' do
   end
 
   describe 'Test params lookup' do
-    let(:facts) { { :foreman_monitor => true , :ipaddress => '10.42.42.42' , :operatingsystem => 'Debian' } }
+    let(:facts) { { :foreman_monitor => true , :ipaddress => '10.42.42.42' , :operatingsystem => 'Debian', :operatingsystemrelease => '6.6' } }
     let(:params) { { :port => '42' } }
 
     it 'should honour module specific vars' do
@@ -212,7 +212,7 @@ describe 'foreman' do
   end
 
   describe 'Test params lookup' do
-    let(:facts) { { :monitor => false , :foreman_monitor => true , :ipaddress => '10.42.42.42' , :operatingsystem => 'Debian' } }
+    let(:facts) { { :monitor => false , :foreman_monitor => true , :ipaddress => '10.42.42.42' , :operatingsystem => 'Debian', :operatingsystemrelease => '6.6' } }
     let(:params) { { :port => '42' } }
 
     it 'should honour top scope module specific over global vars' do
@@ -221,7 +221,7 @@ describe 'foreman' do
   end
 
   describe 'Test params lookup' do
-    let(:facts) { { :monitor => false , :ipaddress => '10.42.42.42' , :operatingsystem => 'Debian' } }
+    let(:facts) { { :monitor => false , :ipaddress => '10.42.42.42' , :operatingsystem => 'Debian', :operatingsystemrelease => '6.6' } }
     let(:params) { { :monitor => true , :firewall => true, :port => '42' } }
 
     it 'should honour passed params over global vars' do
